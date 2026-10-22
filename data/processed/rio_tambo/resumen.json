@@ -1,0 +1,190 @@
+{
+ "clave": "rio_tambo",
+ "nombre": "Río Tambo",
+ "distrito": "Rio Tambo",
+ "provincia": "Satipo",
+ "departamento": "Junín",
+ "region": "Selva central",
+ "bbox": [
+  -73.94,
+  -11.95,
+  -73.78,
+  -11.775
+ ],
+ "corte": "2026-10-20",
+ "pre": [
+  "2026-09-28"
+ ],
+ "post": [
+  "2026-10-20",
+  "2026-10-18",
+  "2026-10-13"
+ ],
+ "nubes_pre_pct": [
+  6.2
+ ],
+ "nubes_post_pct": [
+  46.5,
+  71.4,
+  17.9
+ ],
+ "cobertura_post_pct": 88.9,
+ "umbral_dnbr": 0.242,
+ "ruido_p95": 0.242,
+ "ha_quemadas": 2695.4,
+ "severidad": [
+  {
+   "clase": "Baja",
+   "dnbr_desde": 0.1,
+   "ha": 269.1
+  },
+  {
+   "clase": "Moderada-baja",
+   "dnbr_desde": 0.27,
+   "ha": 1683.5
+  },
+  {
+   "clase": "Moderada-alta",
+   "dnbr_desde": 0.44,
+   "ha": 703.3
+  },
+  {
+   "clase": "Alta",
+   "dnbr_desde": 0.66,
+   "ha": 39.4
+  }
+ ],
+ "por_cobertura": [
+  {
+   "cobertura": "Bosque",
+   "ha": 2653.5,
+   "%": 98.4
+  },
+  {
+   "cobertura": "Pastizal",
+   "ha": 40.2,
+   "%": 1.5
+  },
+  {
+   "cobertura": "Cultivo",
+   "ha": 1.7,
+   "%": 0.1
+  }
+ ],
+ "por_distrito": [
+  {
+   "distrito": "Rio Tambo",
+   "provincia": "Satipo",
+   "departamento": "Junin",
+   "ha": 2659.4
+  },
+  {
+   "distrito": "Mazamari",
+   "provincia": "Satipo",
+   "departamento": "Junin",
+   "ha": 36.0
+  }
+ ],
+ "sensibilidad": [
+  {
+   "posterior": "2026-10-20 + 2026-10-18 + 2026-10-13",
+   "umbral": 0.1,
+   "sembrado_focos": false,
+   "ha": 7282.32,
+   "nubes_pct": ""
+  },
+  {
+   "posterior": "2026-10-20 + 2026-10-18 + 2026-10-13",
+   "umbral": 0.1,
+   "sembrado_focos": true,
+   "ha": 5699.96,
+   "nubes_pct": ""
+  },
+  {
+   "posterior": "2026-10-20 + 2026-10-18 + 2026-10-13",
+   "umbral": 0.24,
+   "sembrado_focos": false,
+   "ha": 3372.96,
+   "nubes_pct": ""
+  },
+  {
+   "posterior": "2026-10-20 + 2026-10-18 + 2026-10-13",
+   "umbral": 0.24,
+   "sembrado_focos": true,
+   "ha": 2709.92,
+   "nubes_pct": ""
+  },
+  {
+   "posterior": "2026-10-20 + 2026-10-18 + 2026-10-13",
+   "umbral": 0.27,
+   "sembrado_focos": false,
+   "ha": 2826.92,
+   "nubes_pct": ""
+  },
+  {
+   "posterior": "2026-10-20 + 2026-10-18 + 2026-10-13",
+   "umbral": 0.27,
+   "sembrado_focos": true,
+   "ha": 2386.84,
+   "nubes_pct": ""
+  },
+  {
+   "posterior": "2026-10-20 + 2026-10-18 + 2026-10-13",
+   "umbral": 0.44,
+   "sembrado_focos": false,
+   "ha": 667.48,
+   "nubes_pct": ""
+  },
+  {
+   "posterior": "2026-10-20 + 2026-10-18 + 2026-10-13",
+   "umbral": 0.44,
+   "sembrado_focos": true,
+   "ha": 667.48,
+   "nubes_pct": ""
+  },
+  {
+   "posterior": "2026-10-13",
+   "umbral": 0.24,
+   "sembrado_focos": false,
+   "ha": 1513.76,
+   "nubes_pct": 17.94
+  },
+  {
+   "posterior": "2026-10-13",
+   "umbral": 0.24,
+   "sembrado_focos": true,
+   "ha": 1462.68,
+   "nubes_pct": 17.94
+  }
+ ],
+ "focos_incendio": 778,
+ "inicio": "2026-09-28 13:06:00",
+ "ultimo_foco": "2026-10-19 14:34:00",
+ "focos_72h": 48,
+ "frp_total_mw": 6337.3,
+ "altitud_quemada_m": [
+  408,
+  613,
+  830
+ ],
+ "pendiente_mediana": 10.6,
+ "viento": {
+  "desde_grados": 25.1,
+  "hacia_grados": 205.1,
+  "velocidad_media_kmh": 5.0,
+  "humedad_min_pct": 52.0
+ },
+ "dias_criticos_pronostico": 0,
+ "edificaciones_total": 3241,
+ "edificaciones": {
+  "Dentro del área quemada": 4,
+  "Alta": 265,
+  "Media": 525,
+  "Baja": 232,
+  "Fuera de 2 km": 2215
+ },
+ "edificaciones_2km": 1026,
+ "edificaciones_1km": 587,
+ "edificaciones_500m": 151,
+ "edificaciones_viento_2km": 137
+}

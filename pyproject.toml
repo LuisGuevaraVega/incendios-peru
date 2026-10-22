@@ -1,0 +1,43 @@
+[project]
+name = "incendios-peru"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "LuisGuevaraV", email = "guevara.gabriel@pucp.edu.pe" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "folium>=0.20.0",
+    "geopandas>=1.2.0",
+    "ipykernel>=7.4.0",
+    "jupyter>=1.1.1",
+    "matplotlib>=3.11.2",
+    "mercantile>=1.2.1",
+    "nbconvert>=7.17.2",
+    "nbformat>=5.11.1",
+    "numpy>=2.4.6",
+    "odc-stac>=0.5.3",
+    "pandas>=3.0.6",
+    "pillow>=13.0.0",
+    "planetary-computer>=1.0.0",
+    "pyarrow>=26.0.0",
+    "pyproj>=3.7.2",
+    "pystac-client>=0.9.1",
+    "rasterio>=1.4.4",
+    "rasterstats>=0.21.0",
+    "requests>=2.34.2",
+    "rioxarray>=0.19.0",
+    "s2sphere>=0.2.5",
+    "scipy>=1.17.1",
+    "shapely>=2.2.0",
+    "streamlit>=1.66.1",
+    "streamlit-folium>=0.27.4",
+    "xarray>=2026.9.0",
+]
+
+[project.scripts]
+incendios-peru = "incendios_peru:main"
+
+[build-system]
+requires = ["uv_build>=0.13.4,<0.14.0"]
+build-backend = "uv_build"

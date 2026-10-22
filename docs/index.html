@@ -1,0 +1,728 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chichas y Río Tambo en 3D</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head><body>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:ital,wght@0,400..700;1,400&display=swap">
+<style>
+/* Informe de campo en una sola página: barra fija, el visor 3D al centro, paneles de datos en grilla de dos columnas */
+:root {
+  --bg: #eceee9; --panel: #f8f9f6; --ink: #17201e; --muted: #5b6662; --line: #cdd3cd;
+  --ember: #c8461b; --scar: #6e1f3a; --sky: #2f6690; --ok: #3b7d4f; --warn: #b8860b;
+  --sev1: #fed976; --sev2: #fd8d3c; --sev3: #e31a1c; --sev4: #800026;
+  --scene: #0e1513; --sombra: 0 1px 2px rgb(0 0 0 / .06), 0 4px 18px rgb(0 0 0 / .06);
+  --f-display: "Archivo", "Arial Narrow", Arial, sans-serif;
+  --f-body: "Public Sans", "Segoe UI", Arial, sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1513; --panel: #172019; --ink: #e5eae4; --muted: #96a29d; --line: #2b3632;
+  --ember: #f0703d; --scar: #c24d74; --sky: #72a8d8; --ok: #6fbf86; --warn: #e2b440;
+  --scene: #070b0a; --sombra: 0 1px 2px rgb(0 0 0 / .4), 0 4px 18px rgb(0 0 0 / .3); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f1513; --panel: #172019; --ink: #e5eae4; --muted: #96a29d; --line: #2b3632;
+  --ember: #f0703d; --scar: #c24d74; --sky: #72a8d8; --ok: #6fbf86; --warn: #e2b440;
+  --scene: #070b0a; --sombra: 0 1px 2px rgb(0 0 0 / .4), 0 4px 18px rgb(0 0 0 / .3); color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--f-body); margin: 0 }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--panel) }
+.envoltura { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.08 }
+h1 { font-size: clamp(2.3rem, 6vw, 4.2rem); font-weight: 760; font-stretch: 78%; letter-spacing: -.01em }
+h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 700; font-stretch: 85% }
+h3 { font-size: 1.12rem; font-weight: 680; font-stretch: 95% }
+p { margin: 0; max-width: 68ch }
+a { color: var(--sky) }
+.ceja { font: 600 .74rem/1.2 var(--f-body); letter-spacing: .12em; text-transform: uppercase; color: var(--ember) }
+.tenue { color: var(--muted) }
+.num { font-family: var(--f-data); font-variant-numeric: tabular-nums }
+:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px }
+
+header.portada { padding-block: 40px 28px; display: grid; gap: 14px }
+header.portada .lede { font-size: 1.08rem; color: var(--muted) }
+header.portada .firma { font-size: .86rem; color: var(--muted) }
+
+nav.barra { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--panel); border-block: 1px solid var(--line) }
+nav.barra .envoltura { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; padding-block: 6px }
+nav.barra a { color: var(--ink); text-decoration: none; font: 600 .84rem var(--f-body); padding: 7px 11px; border-radius: 6px; white-space: nowrap }
+nav.barra a:hover { background: var(--bg) }
+
+section { padding-block: 44px 8px; display: grid; gap: 20px; scroll-margin-top: 60px }
+.cabeza { display: grid; gap: 8px }
+
+/* resumen: dos fichas de incendio */
+.fichas { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr)); gap: 16px }
+.ficha { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: grid; gap: 16px; box-shadow: var(--sombra); min-width: 0 }
+.ficha-cab { display: flex; justify-content: space-between; align-items: start; gap: 12px; flex-wrap: wrap }
+.pill { display: inline-flex; align-items: center; gap: 6px; font: 600 .74rem var(--f-body); padding: 3px 9px; border-radius: 99px; border: 1px solid currentColor; white-space: nowrap }
+.pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor }
+.pill.activo { color: var(--ember) } .pill.calma { color: var(--ok) }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px }
+@media (max-width: 620px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
+.kpi { display: grid; gap: 2px; align-content: start }
+.kpi b { font: 700 1.75rem/1.1 var(--f-display); font-stretch: 85%; font-variant-numeric: tabular-nums }
+.kpi span { font-size: .78rem; color: var(--muted); line-height: 1.35 }
+.hallazgos { display: grid; gap: 10px; padding: 0; margin: 0; list-style: none; counter-reset: h }
+.hallazgos li { display: grid; grid-template-columns: 30px 1fr; gap: 10px; counter-increment: h }
+.hallazgos li::before { content: counter(h); font: 700 1.3rem/1.1 var(--f-display); color: var(--ember) }
+
+.glosario { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 12px }
+.glosario div { border-top: 2px solid var(--line); padding-top: 10px; display: grid; gap: 4px }
+.glosario dt { font-weight: 700 } .glosario dd { margin: 0; color: var(--muted); font-size: .9rem }
+
+/* visor 3D */
+.controles { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center }
+.grupo { display: flex; gap: 2px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 3px }
+.grupo button { font: 600 .82rem var(--f-body); color: var(--muted); background: none; border: 0; padding: 6px 11px; border-radius: 6px; cursor: pointer }
+.grupo button[aria-pressed="true"] { background: var(--ink); color: var(--bg) }
+.grupo button:hover:not([aria-pressed="true"]) { color: var(--ink) }
+label.chk { display: inline-flex; gap: 6px; align-items: center; font-size: .86rem; cursor: pointer }
+.visor { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px }
+@media (max-width: 900px) { .visor { grid-template-columns: minmax(0, 1fr) } }
+.escena-caja { position: relative; border-radius: 10px; overflow: hidden; background: var(--scene); aspect-ratio: 16 / 10; max-width: 100%; min-height: 360px }
+#escena { position: absolute; inset: 0 }
+.cargando { position: absolute; inset: 0; display: grid; place-items: center; color: #dfe6e1; font-size: .9rem; background: rgb(7 11 10 / .55); z-index: 2 }
+.brujula { position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgb(255 255 255 / .9); cursor: pointer; display: grid; place-items: center; z-index: 3 }
+.brujula svg { transition: transform .2s }
+.leyenda3d { position: absolute; left: 10px; bottom: 10px; background: rgb(10 14 13 / .78); color: #e8ece7; border-radius: 8px; padding: 9px 11px; font-size: .74rem; display: grid; gap: 4px; z-index: 3; max-width: calc(100% - 20px) }
+.leyenda3d i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px }
+.ayuda3d { position: absolute; right: 10px; bottom: 10px; color: #cfd8d2; font-size: .72rem; background: rgb(10 14 13 / .6); padding: 4px 8px; border-radius: 6px; z-index: 3 }
+@media (max-width: 620px) { .ayuda3d { display: none } }
+.linea-tiempo { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center }
+.linea-tiempo button { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; font-size: .9rem }
+input[type=range] { width: 100%; accent-color: var(--ember) }
+#etq-dia { font: 500 .84rem var(--f-data); white-space: nowrap }
+.lateral { display: grid; gap: 12px; align-content: start; min-width: 0 }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 10px; min-width: 0 }
+.claves { display: grid; grid-template-columns: 1fr 1fr; gap: 12px }
+.claves div { display: grid; gap: 1px }
+.claves span { font-size: .74rem; color: var(--muted) }
+.claves b { font: 700 1.3rem/1.15 var(--f-display); font-variant-numeric: tabular-nums }
+.claves small { font: 400 .74rem var(--f-body); color: var(--muted); margin-left: 3px }
+dl.datos { display: grid; grid-template-columns: auto 1fr; gap: 5px 12px; margin: 0; font-size: .84rem }
+dl.datos dt { color: var(--muted) } dl.datos dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums }
+.dos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 16px }
+svg.grafico { width: 100%; height: auto; display: block; overflow: visible }
+svg.grafico text { fill: var(--muted); font: 11px var(--f-body) }
+svg.grafico .eje line, svg.grafico .eje path { stroke: var(--line) }
+
+/* tabla de viviendas */
+.tabla-caja { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--panel) }
+table { border-collapse: collapse; width: 100%; font-size: .84rem; min-width: 760px }
+th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap }
+th { font: 600 .72rem var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--bg) }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums }
+tr:last-child td { border-bottom: 0 }
+.copiar { font: 500 .8rem var(--f-data); background: none; border: 1px dashed var(--line); color: var(--ink); border-radius: 5px; padding: 2px 7px; cursor: pointer }
+.copiar:hover { border-color: var(--ember) }
+.barrita { display: inline-block; height: 7px; border-radius: 4px; background: var(--ember); vertical-align: middle; margin-right: 6px }
+.cat { font: 600 .74rem var(--f-body); padding: 2px 8px; border-radius: 99px; color: #fff }
+.cat-4 { background: #111 } .cat-3 { background: #c0181b } .cat-2 { background: #d9692c } .cat-1 { background: #b8920e }
+.si { color: var(--ember); font-weight: 700 } .no { color: var(--muted) }
+.formula { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 10px }
+.formula div { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px; display: grid; gap: 3px }
+.formula b { font: 700 1.5rem var(--f-display); color: var(--ember) }
+.formula span { font-size: .84rem; color: var(--muted) }
+
+.mapa-caja { position: relative; border-radius: 10px; overflow: hidden; background: var(--panel); border: 1px solid var(--line); aspect-ratio: 4 / 5; max-height: 720px; max-width: 100% }
+#mapa { position: absolute; inset: 0 }
+.lista-top { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: .86rem }
+.lista-top li { display: grid; grid-template-columns: 22px 1fr auto; gap: 8px; align-items: baseline; padding-bottom: 6px; border-bottom: 1px solid var(--line) }
+.lista-top li.marcado { color: var(--ember); font-weight: 650 }
+
+.tabla-decisiones td:first-child { font-weight: 600 }
+footer { padding-block: 40px 60px; color: var(--muted); font-size: .84rem; display: grid; gap: 8px }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important } }
+</style>
+
+<header class="portada envoltura">
+  <span class="ceja">Ciencia de Datos con Python · Universidad del Pacífico · datos al 20 de octubre de 2026</span>
+  <h1>Chichas y Río Tambo, vistos desde el espacio</h1>
+  <p class="lede">Dos incendios de octubre de 2026, uno en la puna de Arequipa y otro en la selva central. Cuánto se quemó según Sentinel-2, qué tipo de vegetación ardió y qué edificaciones de Google Open Buildings quedan expuestas.</p>
+  <span class="firma">Luis Gabriel Guevara Vega · datos abiertos: INPE, NASA FIRMS, Sentinel-2, ESA WorldCover, Copernicus DEM, Open-Meteo y Google Open Buildings</span>
+</header>
+
+<nav class="barra" aria-label="Secciones">
+  <div class="envoltura">
+    <a href="#resumen">Resumen</a><a href="#incendio3d">Incendio en 3D</a><a href="#viviendas">Viviendas expuestas</a>
+    <a href="#peru">Perú</a><a href="#decisiones">Decisiones de método</a><a href="#clima">Clima</a><a href="#fuentes">Fuentes y límites</a>
+  </div>
+</nav>
+
+<main class="envoltura">
+  <section id="resumen">
+    <div class="cabeza">
+      <span class="ceja">Resumen</span>
+      <h2>Dos incendios, dos paisajes, dos umbrales</h2>
+    </div>
+    <div class="fichas" id="fichas"></div>
+    <div class="panel">
+      <h3>Tres hallazgos</h3>
+      <ol class="hallazgos" id="hallazgos"></ol>
+    </div>
+    <dl class="glosario">
+      <div><dt>Foco de calor</dt><dd>Un píxel VIIRS de 375 m más caliente de lo esperado. El satélite pasa a las ~01:30 y ~13:30 h. Un foco no es un incendio.</dd></div>
+      <div><dt>Incendio</dt><dd>Focos encadenados a ≤ 1 km y ≤ 48 h entre sí.</dd></div>
+      <div><dt>Área quemada (dNBR)</dt><dd>Caída del índice NBR de Sentinel-2 entre una imagen previa y una posterior, por encima de un umbral y tocando un foco.</dd></div>
+      <div><dt>Exposición</dt><dd>Índice 0–100 por edificación: cercanía al fuego, viento, pendiente y vegetación. Ordena dónde mirar; no predice daños.</dd></div>
+    </dl>
+  </section>
+
+  <section id="incendio3d">
+    <div class="cabeza">
+      <span class="ceja">Incendio en 3D</span>
+      <h2 id="titulo3d">Relieve real con la imagen Sentinel-2 encima</h2>
+      <p class="tenue">Arrastra para mover, clic derecho o dos dedos para girar, rueda o pellizco para acercar. Las columnas son edificaciones de Google Open Buildings: más altas y más rojas, más expuestas.</p>
+    </div>
+    <div class="controles">
+      <div class="grupo" id="sel-evento" role="group" aria-label="Incendio"></div>
+      <div class="grupo" id="texturas" role="group" aria-label="Imagen de fondo"></div>
+      <label class="chk"><input type="checkbox" id="c-sev" checked> Severidad</label>
+      <label class="chk"><input type="checkbox" id="c-edif" checked> Edificaciones</label>
+      <label class="chk"><input type="checkbox" id="c-focos" checked> Focos</label>
+    </div>
+    <div class="visor">
+      <div style="display:grid;gap:10px;min-width:0">
+        <div class="escena-caja">
+          <div id="escena"></div>
+          <div class="cargando" id="cargando-3d">Cargando terreno…</div>
+          <button class="brujula" id="brujula" type="button" aria-label="Orientar al norte"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M10 1 14 10H6Z" fill="#c8461b"/><path d="M10 19 6 10h8Z" fill="#444"/></svg></button>
+          <div class="leyenda3d" id="leyenda3d"></div>
+          <span class="ayuda3d">Pasa el cursor sobre un foco o una edificación</span>
+        </div>
+        <div class="linea-tiempo">
+          <button id="play-3d" type="button" aria-label="Reproducir el avance" aria-pressed="false">▶</button>
+          <input type="range" id="dia-3d" min="0" max="1" value="1" aria-label="Día">
+          <span id="etq-dia"></span>
+        </div>
+      </div>
+      <div class="lateral">
+        <div class="panel" id="ficha3d"></div>
+        <div class="panel"><h3>Focos por día</h3><svg class="grafico" id="g-dias" viewBox="0 0 300 120" role="img" aria-label="Focos por día del incendio"></svg></div>
+      </div>
+    </div>
+    <div class="dos">
+      <div class="panel"><h3>¿Qué se quemó? (ESA WorldCover 2021)</h3><svg class="grafico" id="g-cobertura" viewBox="0 0 460 140" role="img" aria-label="Hectáreas quemadas por cobertura"></svg></div>
+      <div class="panel"><h3>Severidad (USGS, sobre dNBR)</h3><svg class="grafico" id="g-severidad" viewBox="0 0 460 140" role="img" aria-label="Hectáreas por clase de severidad"></svg></div>
+    </div>
+  </section>
+
+  <section id="viviendas">
+    <div class="cabeza">
+      <span class="ceja">Viviendas expuestas · Google Open Buildings</span>
+      <h2 id="titulo-viv">Edificaciones cerca del fuego</h2>
+      <p class="tenue">Cada edificación detectada por Google en la zona recibe un índice de exposición. Copia el Plus Code y pégalo en Google Maps para ubicarla.</p>
+    </div>
+    <div class="formula">
+      <div><b>50</b><span>Cercanía: 50 en el borde del fuego (área quemada o focos del 18–20 oct), 0 a 2 km</span></div>
+      <div><b>20</b><span>A favor del viento de la tarde pronosticado para el 21–23 oct (±45°)</span></div>
+      <div><b>15</b><span>Cuesta arriba del punto de fuego más cercano: el fuego sube más rápido</span></div>
+      <div><b>15</b><span>Vegetación (WorldCover) en ~100 m alrededor</span></div>
+    </div>
+    <div class="dos">
+      <div class="panel"><h3>Edificaciones por categoría</h3><svg class="grafico" id="g-categorias" viewBox="0 0 460 150" role="img" aria-label="Edificaciones por categoría de exposición"></svg></div>
+      <div class="panel"><h3>Edificaciones por distancia al fuego</h3><svg class="grafico" id="g-distancia" viewBox="0 0 460 150" role="img" aria-label="Edificaciones acumuladas por distancia"></svg></div>
+    </div>
+    <div class="tabla-caja">
+      <table>
+        <thead><tr><th>#</th><th>Plus Code</th><th>Categoría</th><th class="n">Índice</th><th class="n">Distancia</th><th>Viento</th><th>Cuesta arriba</th><th class="n">Vegetación</th><th class="n">Área</th></tr></thead>
+        <tbody id="tabla-viv"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="peru">
+    <div class="cabeza">
+      <span class="ceja">El contexto nacional</span>
+      <h2 id="titulo-peru">Focos VIIRS en el Perú</h2>
+    </div>
+    <div class="dos">
+      <div style="display:grid;gap:10px;min-width:0">
+        <div class="grupo" id="sel-periodo" role="group" aria-label="Periodo" style="justify-self:start"></div>
+        <div class="mapa-caja"><div id="mapa"></div></div>
+      </div>
+      <div class="lateral">
+        <div class="panel"><h3>Focos por día</h3><svg class="grafico" id="g-nacional" viewBox="0 0 460 170" role="img" aria-label="Focos por día en el Perú"></svg></div>
+        <div class="panel"><h3>Incendios más grandes del periodo</h3><ol class="lista-top" id="top-incendios"></ol><p class="tenue" style="font-size:.78rem">Por número de focos. Regla: ≤ 1 km y ≤ 48 h.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="decisiones">
+    <div class="cabeza">
+      <span class="ceja">La lección de Curahuasi</span>
+      <h2>El mismo incendio, otras decisiones razonables</h2>
+      <p class="tenue">La computadora siempre da un número. Estas barras muestran cuánto cambian las hectáreas con otras fechas, otro umbral o sin exigir que la mancha toque un foco. En color, la decisión usada.</p>
+    </div>
+    <div class="dos">
+      <div class="panel"><h3 id="t-sens-0"></h3><svg class="grafico" id="g-sens-0" viewBox="0 0 460 260" role="img" aria-label="Sensibilidad de Chichas"></svg></div>
+      <div class="panel"><h3 id="t-sens-1"></h3><svg class="grafico" id="g-sens-1" viewBox="0 0 460 260" role="img" aria-label="Sensibilidad de Río Tambo"></svg></div>
+    </div>
+    <div class="tabla-caja">
+      <table class="tabla-decisiones"><thead><tr><th>Decisión</th><th>Chichas</th><th>Río Tambo</th></tr></thead><tbody id="tabla-decisiones"></tbody></table>
+    </div>
+  </section>
+
+  <section id="clima">
+    <div class="cabeza">
+      <span class="ceja">Clima · Open-Meteo</span>
+      <h2>¿Puede crecer esta semana?</h2>
+      <p class="tenue">Día crítico: humedad mínima &lt; 30 %, ráfagas ≥ 30 km/h y lluvia &lt; 1 mm. La zona gris es el pronóstico desde el 21 de octubre.</p>
+    </div>
+    <div class="dos">
+      <div class="panel"><h3 id="t-clima-0"></h3><svg class="grafico" id="g-clima-0" viewBox="0 0 460 200" role="img" aria-label="Clima en Chichas"></svg></div>
+      <div class="panel"><h3 id="t-clima-1"></h3><svg class="grafico" id="g-clima-1" viewBox="0 0 460 200" role="img" aria-label="Clima en Río Tambo"></svg></div>
+    </div>
+  </section>
+
+  <section id="fuentes">
+    <div class="cabeza">
+      <span class="ceja">Fuentes y límites</span>
+      <h2>Cómo se hizo y qué no dice</h2>
+    </div>
+    <div class="dos">
+      <div class="panel">
+        <h3>Método</h3>
+        <ol style="margin:0;padding-left:20px;display:grid;gap:6px;font-size:.9rem">
+          <li>Focos VIIRS (S-NPP, NOAA-20, NOAA-21) de INPE, ubicados en distritos INEI y validados con NASA FIRMS.</li>
+          <li>Incendio = focos a ≤ 1 km y ≤ 48 h. Se eligen Chichas y el complejo de Río Tambo.</li>
+          <li>Sentinel-2 L2A (Planetary Computer): NBR con B8A y B12, desfase de +1000 corregido, nubes fuera con SCL; agua, roca y nieve fuera con WorldCover.</li>
+          <li>Umbral = máx(0,10; percentil 95 del dNBR en zonas sin focos a más de 3 km). Mediana 3×3, manchas ≥ 1 ha que toquen un foco entre las dos imágenes.</li>
+          <li>Cruces en la misma grilla de 20 m: WorldCover, Copernicus DEM y distritos.</li>
+          <li>Open Buildings v3 recortado por zona; índice de exposición con Open-Meteo (viento de la tarde del 21 al 23 de octubre).</li>
+        </ol>
+      </div>
+      <div class="panel">
+        <h3>Limitaciones</h3>
+        <ul style="margin:0;padding-left:20px;display:grid;gap:6px;font-size:.9rem">
+          <li>Un foco de calor no es un incendio, y el satélite no ve fuegos chicos, cortos o bajo dosel cerrado.</li>
+          <li>Las nubes esconden el fuego: en Río Tambo, 11 % de la zona no tiene ninguna imagen limpia posterior.</li>
+          <li>El umbral es una decisión: 0,10 en la puna y 0,24 en la selva. La sección de decisiones muestra cuánto pesa.</li>
+          <li>Open Buildings detecta techos, no hogares, con imágenes de hasta ~2023.</li>
+          <li>WorldCover es de 2021. El índice de exposición no es un modelo de propagación.</li>
+          <li>Herramienta académica e independiente: no reemplaza los reportes del COEN, INDECI, SERFOR ni SERNANP.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="envoltura">
+  <span>Código, notebook y datos: <a href="https://github.com/LuisGuevaraVega/incendios-peru">github.com/LuisGuevaraVega/incendios-peru</a> · licencia MIT.</span>
+  <span>Imágenes Sentinel-2 y Copernicus DEM: Copernicus/ESA. Edificaciones: Google Open Buildings (CC BY 4.0, ODbL). Cobertura: ESA WorldCover 2021 (CC BY 4.0). Clima: Open-Meteo (CC BY 4.0). Focos: INPE Queimadas y NASA FIRMS.</span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://unpkg.com/deck.gl@9.0.38/dist.min.js"></script>
+<script>
+"use strict";
+const $ = s => document.querySelector(s);
+const el = (tag, attrs = {}, ...hijos) => {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (v == null) continue;
+    if (k === "text") n.textContent = v; else if (k === "html") n.innerHTML = v;
+    else if (k.startsWith("on")) n.addEventListener(k.slice(2), v); else n.setAttribute(k, v);
+  }
+  for (const h of hijos) if (h != null) n.append(h);
+  return n;
+};
+const fmt = new Intl.NumberFormat("es-PE", { maximumFractionDigits: 0 });
+const fmt1 = new Intl.NumberFormat("es-PE", { maximumFractionDigits: 1 });
+const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+const fechaCorta = s => { const [a, m, d] = s.slice(0, 10).split("-"); return `${+d} ${MESES[+m - 1]}`; };
+const token = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const rgb = n => { const c = d3.color(token(n)); return [c.r, c.g, c.b]; };
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const CLAVES = ["chichas", "rio_tambo"];
+const CAT = { 4: "Dentro del área quemada", 3: "Alta", 2: "Media", 1: "Baja", 0: "Fuera de 2 km" };
+const CAT_COLOR = { 4: [20, 20, 20], 3: [215, 25, 28], 2: [240, 138, 75], 1: [246, 213, 92], 0: [154, 167, 176] };
+const D = { ev: {} };
+
+async function json(url) { const r = await fetch(url); if (!r.ok) throw new Error(url + " " + r.status); return r.json(); }
+function cargarImagen(src) { return new Promise((ok, mal) => { const i = new Image(); i.onload = () => ok(i); i.onerror = mal; i.src = src; }); }
+
+async function iniciar() {
+  const [nac, dep, ...evs] = await Promise.all([json("data/nacional.json"), json("data/departamentos.geojson"),
+    ...CLAVES.map(k => json(`data/${k}/detalle.json`))]);
+  D.nac = nac; D.dep = dep; CLAVES.forEach((k, i) => D.ev[k] = evs[i]);
+  pintarResumen(); pintarSensibilidad(); pintarDecisiones(); pintarClimas(); iniciarMapa(); iniciar3D();
+}
+
+/* ------------------------------------------------------------- resumen */
+function activo(d) { return d.ultimo_foco.slice(0, 10) >= "2026-10-19"; }
+function pintarResumen() {
+  $("#fichas").replaceChildren(...CLAVES.map(k => {
+    const d = D.ev[k];
+    const estado = activo(d) ? el("span", { class: "pill activo", text: `Activo · último foco ${fechaCorta(d.ultimo_foco)}` })
+                             : el("span", { class: "pill calma", text: `Sin focos desde el ${fechaCorta(d.ultimo_foco)}` });
+    const kpi = (v, t) => el("div", { class: "kpi" }, el("b", { text: v }), el("span", { text: t }));
+    return el("article", { class: "ficha" },
+      el("div", { class: "ficha-cab" },
+        el("div", {}, el("h3", { text: d.nombre, style: "font-size:1.6rem" }),
+          el("span", { class: "tenue", text: `${d.provincia} · ${d.departamento} · ${d.region}` })), estado),
+      el("div", { class: "kpis" },
+        kpi(fmt.format(d.ha_quemadas), `ha quemadas (Sentinel-2, al ${fechaCorta(d.post[0])})`),
+        kpi(`${fmt.format(d.por_cobertura[0]["%"])} %`, `${d.por_cobertura[0].cobertura.toLowerCase()} entre lo quemado`),
+        kpi(fmt.format(d.edificaciones_1km), "edificaciones a ≤ 1 km del fuego"),
+        kpi(fmt.format(d.edificaciones.Alta), "con exposición alta")),
+      el("p", { class: "tenue", style: "font-size:.86rem",
+        text: `${fmt.format(d.focos_incendio)} focos VIIRS desde el ${fechaCorta(d.inicio)} · umbral dNBR ${fmt1.format(d.umbral_dnbr).replace(".", ",")} · ${fmt1.format(d.cobertura_post_pct)} % de la zona vista sin nubes después del fuego · altitud ${fmt.format(d.altitud_quemada_m[0])}–${fmt.format(d.altitud_quemada_m[2])} m`.replaceAll(".", "§").replaceAll(",", ".").replaceAll("§", ",") }));
+  }));
+  const ch = D.ev.chichas, rt = D.ev.rio_tambo;
+  const s27 = ch.sensibilidad.find(x => x.umbral === 0.27 && x.sembrado_focos).ha;
+  $("#hallazgos").replaceChildren(
+    el("li", { html: `<span><b>Chichas: ${fmt.format(ch.ha_quemadas)} ha en tres días, ${fmt.format(ch.por_cobertura[0]["%"])} % pastizal de puna.</b> Con el umbral clásico de 0,27 se habrían reportado solo ${fmt.format(s27)} ha: el ${fmt.format(100 - 100 * s27 / ch.ha_quemadas)} % del área ardió con severidad baja. Un tercio está en el distrito vecino de Toro.</span>` }),
+    el("li", { html: `<span><b>Río Tambo: ${fmt.format(rt.ha_quemadas)} ha, ${fmt.format(rt.por_cobertura[0]["%"])} % bosque, y sigue activo.</b> ${fmt.format(rt.focos_incendio)} focos desde el ${fechaCorta(rt.inicio)}; ardió con humedad de 45–70 %, así que lo explican las quemas, no el clima.</span>` }),
+    el("li", { html: `<span><b>${fmt.format(rt.edificaciones_1km + ch.edificaciones_1km)} edificaciones a ≤ 1 km del fuego</b> (${fmt.format(rt.edificaciones_1km)} en Río Tambo y ${fmt.format(ch.edificaciones_1km)} en Chichas); ${fmt.format(rt.edificaciones.Alta + ch.edificaciones.Alta)} con exposición alta y ${rt.edificaciones["Dentro del área quemada"] + ch.edificaciones["Dentro del área quemada"]} ya dentro del área quemada.</span>` }));
+}
+
+/* ------------------------------------------------------------- gráficos */
+function barrasH(svgSel, filas, { ancho = 460, alto, etiqueta = 150, color = () => token("--ember"), unidad = "ha" } = {}) {
+  const svg = d3.select(svgSel); svg.selectAll("*").remove();
+  const h = alto || filas.length * 26 + 10;
+  svg.attr("viewBox", `0 0 ${ancho} ${h}`);
+  const x = d3.scaleLinear().domain([0, d3.max(filas, f => f.v) || 1]).range([0, ancho - etiqueta - 70]);
+  const g = svg.selectAll("g").data(filas).join("g").attr("transform", (f, i) => `translate(0,${i * 26 + 4})`);
+  g.append("text").attr("x", etiqueta - 8).attr("y", 13).attr("text-anchor", "end").text(f => f.k);
+  g.append("rect").attr("x", etiqueta).attr("y", 2).attr("height", 16).attr("rx", 3).attr("width", f => Math.max(1, x(f.v))).attr("fill", (f, i) => color(f, i));
+  g.append("text").attr("x", f => etiqueta + x(f.v) + 6).attr("y", 14).style("fill", "var(--ink)").style("font-family", "var(--f-data)")
+    .text(f => `${fmt.format(f.v)}${unidad ? " " + unidad : ""}`);
+}
+
+function graficoDias(d, dia) {
+  const svg = d3.select("#g-dias"); svg.selectAll("*").remove();
+  const W = 300, H = 120, m = { l: 26, r: 6, t: 8, b: 20 };
+  const x = d3.scaleBand().domain(d.dias.map((_, i) => i)).range([m.l, W - m.r]).padding(0.15);
+  const y = d3.scaleLinear().domain([0, d3.max(d.dias, x => x.focos) || 1]).nice().range([H - m.b, m.t]);
+  svg.append("g").attr("class", "eje").attr("transform", `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(3).tickSize(-(W - m.l - m.r))).call(g => g.select(".domain").remove());
+  svg.selectAll("rect.b").data(d.dias).join("rect").attr("class", "b").attr("x", (_, i) => x(i)).attr("width", x.bandwidth())
+    .attr("y", f => y(f.focos)).attr("height", f => y(0) - y(f.focos)).attr("rx", 1.5)
+    .attr("fill", (_, i) => i === dia ? token("--ember") : i < dia ? token("--muted") : token("--line"));
+  const marcas = [0, Math.floor((d.dias.length - 1) / 2), d.dias.length - 1];
+  svg.selectAll("text.f").data(marcas).join("text").attr("class", "f").attr("x", i => x(i) + x.bandwidth() / 2).attr("y", H - 5).attr("text-anchor", "middle").text(i => fechaCorta(d.dias[i].fecha));
+}
+
+function pintarSensibilidad() {
+  CLAVES.forEach((k, j) => {
+    const d = D.ev[k];
+    const t = d.sensibilidad;
+    const min = d3.min(t, f => f.ha), max = d3.max(t, f => f.ha);
+    $(`#t-sens-${j}`).textContent = `${d.nombre}: de ${fmt.format(min)} a ${fmt.format(max)} ha`;
+    const filas = t.map(f => ({ k: `${f.posterior.replaceAll("2026-", "").split(" + ").map(fechaCorta).join("+")} · ${String(f.umbral.toFixed(2)).replace(".", ",")} · ${f.sembrado_focos ? "sembrado" : "sin sembrar"}`,
+      v: f.ha, usado: f.posterior === d.post.join(" + ") && Math.abs(f.umbral - d.umbral_dnbr) < 0.006 && f.sembrado_focos }));
+    barrasH(`#g-sens-${j}`, filas, { etiqueta: 215, color: f => f.usado ? token("--ember") : token("--line") });
+  });
+}
+
+function pintarDecisiones() {
+  const ch = D.ev.chichas, rt = D.ev.rio_tambo;
+  const nubes = d => d.post.map((f, i) => `${fechaCorta(f)} (${fmt1.format(d.nubes_post_pct[i])} %)`).join(" → ");
+  const filas = [
+    ["Imagen previa (nubes en la zona)", `${fechaCorta(ch.pre[0])} (${ch.nubes_pre_pct[0]} %)`, `${fechaCorta(rt.pre[0])} (${rt.nubes_pre_pct[0]} %)`],
+    ["Imagen posterior: compuesto, primera fecha limpia por píxel", nubes(ch), nubes(rt)],
+    ["Zona vista sin nubes después", `${fmt1.format(ch.cobertura_post_pct)} %`, `${fmt1.format(rt.cobertura_post_pct)} %`],
+    ["Ruido: p95 del dNBR sin focos a > 3 km", ch.ruido_p95, rt.ruido_p95],
+    ["Umbral usado = máx(0,10; ruido)", ch.umbral_dnbr, rt.umbral_dnbr],
+    ["Sembrado", "manchas ≥ 1 ha que tocan un foco (≤ 750 m)", "igual"],
+    ["Zona de análisis (lon/lat)", ch.bbox.join(", "), rt.bbox.join(", ")],
+  ];
+  $("#tabla-decisiones").replaceChildren(...filas.map(f => el("tr", {}, ...f.map(c => el("td", { text: String(c) })))));
+}
+
+function graficoClima(sel, d) {
+  const svg = d3.select(sel); svg.selectAll("*").remove();
+  const W = 460, H = 200, m = { l: 30, r: 8, t: 10, b: 24 };
+  const c = d.clima.map(f => ({ ...f, t: new Date(f.fecha + "T12:00") }));
+  const x = d3.scaleTime().domain(d3.extent(c, f => f.t)).range([m.l, W - m.r]);
+  const y = d3.scaleLinear().domain([0, Math.max(80, d3.max(c, f => Math.max(f.relative_humidity_2m_min, f.wind_gusts_10m_max)))]).nice().range([H - m.b, m.t]);
+  const pr = c.find(f => f.pronostico);
+  if (pr) svg.append("rect").attr("x", x(pr.t) - 6).attr("y", m.t).attr("width", W - m.r - x(pr.t) + 6).attr("height", H - m.b - m.t).attr("fill", token("--muted")).attr("opacity", 0.12);
+  svg.append("g").attr("class", "eje").attr("transform", `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4).tickSize(-(W - m.l - m.r))).call(g => g.select(".domain").remove());
+  svg.append("g").attr("class", "eje").attr("transform", `translate(0,${H - m.b})`).call(d3.axisBottom(x).ticks(5).tickFormat(t => `${t.getDate()} ${MESES[t.getMonth()]}`));
+  svg.append("path").datum(c).attr("fill", token("--sky")).attr("opacity", 0.22).attr("d", d3.area().x(f => x(f.t)).y0(y(0)).y1(f => y(f.relative_humidity_2m_min)));
+  svg.selectAll("rect.ll").data(c).join("rect").attr("class", "ll").attr("x", f => x(f.t) - 3).attr("width", 6).attr("y", f => y(f.precipitation_sum)).attr("height", f => y(0) - y(f.precipitation_sum)).attr("fill", token("--sky"));
+  svg.append("path").datum(c).attr("fill", "none").attr("stroke", token("--ember")).attr("stroke-width", 2).attr("d", d3.line().x(f => x(f.t)).y(f => y(f.wind_gusts_10m_max)));
+  svg.selectAll("circle").data(c.filter(f => f.dia_critico)).join("circle").attr("cx", f => x(f.t)).attr("cy", f => y(f.wind_gusts_10m_max)).attr("r", 3).attr("fill", token("--ink"));
+  const ley = [["--sky", "humedad mínima %"], ["--ember", "ráfaga máx. km/h"], ["--ink", "día crítico"]];
+  ley.forEach(([t, txt], i) => { svg.append("rect").attr("x", m.l + 6 + i * 128).attr("y", m.t + 2).attr("width", 10).attr("height", 10).attr("fill", token(t)).attr("opacity", t === "--sky" ? .5 : 1); svg.append("text").attr("x", m.l + 20 + i * 128).attr("y", m.t + 11).text(txt); });
+}
+function pintarClimas() {
+  CLAVES.forEach((k, j) => {
+    const d = D.ev[k], c = d.clima.filter(f => !f.pronostico);
+    const crit = c.filter(f => f.dia_critico).length;
+    $(`#t-clima-${j}`).textContent = `${d.nombre}: ${crit} días críticos en 30 · humedad mínima ${fmt.format(d3.min(c, f => f.relative_humidity_2m_min))} %`;
+    graficoClima(`#g-clima-${j}`, d);
+  });
+}
+
+/* ------------------------------------------------------------- mapa nacional */
+const M = { dias: 30 };
+function iniciarMapa() {
+  const n = D.nac;
+  $("#titulo-peru").textContent = `${fmt.format(n.total)} focos VIIRS en el Perú del ${fechaCorta(n.desde)} al ${fechaCorta(n.hasta)}`;
+  const periodos = [[7, "7 días"], [14, "14 días"], [30, "30 días"]];
+  const pintarBotones = () => $("#sel-periodo").replaceChildren(...periodos.map(([v, t]) => el("button", { type: "button", "aria-pressed": String(M.dias === v), text: t, onclick: () => { M.dias = v; pintarBotones(); pintarMapa(); } })));
+  pintarBotones();
+  M.deck = new deck.Deck({
+    parent: $("#mapa"), views: new deck.MapView({ repeat: false }),
+    initialViewState: { longitude: -75.0, latitude: -9.4, zoom: 4.25, minZoom: 3.5, maxZoom: 11 },
+    controller: { scrollZoom: false, dragRotate: false, touchRotate: false },
+    getTooltip: ({ object, layer }) => layer && layer.id === "deps" && object ? { text: object.properties.NOMBDEP } : null,
+  });
+  new ResizeObserver(() => { const c = $("#mapa"); const vp = new deck.WebMercatorViewport({ width: c.clientWidth, height: c.clientHeight }).fitBounds([[-81.4, -18.4], [-68.6, -0.03]], { padding: 12 }); M.deck.setProps({ initialViewState: { longitude: vp.longitude, latitude: vp.latitude, zoom: vp.zoom, minZoom: 3.5, maxZoom: 11 } }); }).observe($("#mapa"));
+  pintarMapa();
+  const top = n.top_incendios.slice(0, 8);
+  $("#top-incendios").replaceChildren(...top.map((f, i) => el("li", { class: ["RIO TAMBO", "CHICHAS"].includes(f.distrito) ? "marcado" : null },
+    el("span", { class: "num tenue", text: i + 1 }), el("span", { text: `${titulo(f.distrito)} (${titulo(f.departamento)})` }), el("span", { class: "num", text: `${fmt.format(f.focos)} focos` }))));
+}
+const titulo = s => s.toLowerCase().replace(/(^|\s)\S/g, c => c.toUpperCase());
+function pintarMapa() {
+  const n = D.nac, ultimo = n.dias.length - 1, desde = ultimo - M.dias + 1;
+  const pts = n.puntos.filter(p => p[2] >= desde);
+  const fuego = rgb("--ember"), tenue = rgb("--muted");
+  M.deck.setProps({ layers: [
+    new deck.GeoJsonLayer({ id: "deps", data: D.dep, pickable: true, stroked: true, filled: true,
+      getFillColor: [...rgb("--bg"), 255], getLineColor: [...rgb("--line"), 255], lineWidthMinPixels: 0.8,
+      updateTriggers: { getFillColor: token("--bg"), getLineColor: token("--line") } }),
+    new deck.ScatterplotLayer({ id: "focos-pe", data: pts, getPosition: p => [p[0], p[1]], radiusUnits: "pixels", getRadius: p => p[2] >= ultimo - 1 ? 2.2 : 1.4,
+      getFillColor: p => p[2] >= ultimo - 1 ? [...fuego, 230] : [...fuego.map((c, i) => Math.round(c * 0.55 + tenue[i] * 0.45)), 120],
+      updateTriggers: { getFillColor: [M.dias, token("--ember")], getRadius: M.dias } }),
+    new deck.TextLayer({ id: "etiquetas", data: CLAVES.map(k => D.ev[k]), getPosition: d => [(d.bbox[0] + d.bbox[2]) / 2, d.bbox[3]],
+      getText: d => d.nombre, getSize: 13, getColor: [...rgb("--ink"), 255], fontFamily: "Public Sans, sans-serif", fontWeight: 700,
+      getPixelOffset: [0, -12], background: true, getBackgroundColor: [...rgb("--panel"), 225], backgroundPadding: [4, 2] }),
+  ] });
+  graficoNacional(desde);
+}
+function graficoNacional(desde) {
+  const n = D.nac, svg = d3.select("#g-nacional"); svg.selectAll("*").remove();
+  const W = 460, H = 170, m = { l: 36, r: 6, t: 8, b: 22 };
+  const datos = n.dias.map((f, i) => ({ t: new Date(f + "T12:00"), v: n.por_dia[i], i }));
+  const x = d3.scaleBand().domain(datos.map(d => d.i)).range([m.l, W - m.r]).padding(0.15);
+  const y = d3.scaleLinear().domain([0, d3.max(datos, d => d.v)]).nice().range([H - m.b, m.t]);
+  svg.append("g").attr("class", "eje").attr("transform", `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4).tickSize(-(W - m.l - m.r)).tickFormat(d3.format("~s"))).call(g => g.select(".domain").remove());
+  svg.selectAll("rect").data(datos).join("rect").attr("x", d => x(d.i)).attr("width", x.bandwidth()).attr("y", d => y(d.v)).attr("height", d => y(0) - y(d.v)).attr("rx", 1.5)
+    .attr("fill", d => d.i >= desde ? token("--ember") : token("--line"));
+  const marcas = datos.filter((_, i) => i % 7 === 0 || i === datos.length - 1);
+  svg.selectAll("text.f").data(marcas).join("text").attr("class", "f").attr("x", d => x(d.i) + x.bandwidth() / 2).attr("y", H - 6).attr("text-anchor", "middle").text(d => `${d.t.getDate()} ${MESES[d.t.getMonth()]}`);
+}
+
+/* ------------------------------------------------------------- vista 3D */
+const E3 = { id: null, textura: "natural_post", dia: 0, play: null, vista: null };
+const NOMBRES_TEX = { natural_post: "Después", natural_pre: "Antes", infrarrojo_post: "Infrarrojo", relieve_post: "Relieve" };
+function iniciar3D() {
+  const pintarSel = () => $("#sel-evento").replaceChildren(...CLAVES.map(k => el("button", { type: "button", "aria-pressed": String(E3.id === k), text: D.ev[k].nombre,
+    onclick: () => { if (E3.id !== k) cargarEvento3D(k).then(pintarSel); } })));
+  $("#dia-3d").addEventListener("input", ev => { pararPlay3D(); E3.dia = +ev.target.value; pintar3D(); });
+  $("#play-3d").addEventListener("click", () => (E3.play ? pararPlay3D() : play3D()));
+  for (const id of ["#c-sev", "#c-edif", "#c-focos"]) $(id).addEventListener("change", () => componerTextura().then(pintar3D));
+  $("#brujula").addEventListener("click", () => { if (E3.vista) E3.deck.setProps({ initialViewState: { ...E3.vista, bearing: 0, transitionDuration: reduceMotion ? 0 : 600 } }); });
+  E3.deck = new deck.Deck({
+    parent: $("#escena"), initialViewState: { longitude: -73, latitude: -15.5, zoom: 11, pitch: 55, bearing: -20, maxPitch: 80 },
+    controller: { touchRotate: true }, views: new deck.MapView({ repeat: false }), layers: [],
+    onViewStateChange: ({ viewState }) => { E3.vista = viewState; $("#brujula svg").style.transform = `rotate(${-viewState.bearing}deg)`; return viewState; },
+    effects: [new deck.LightingEffect({
+      ambient: new deck.AmbientLight({ color: [255, 255, 255], intensity: 1.0 }),
+      sol: new deck.DirectionalLight({ color: [255, 250, 240], intensity: 1.3, direction: [-1, -2, -2.5] }) })],
+    getTooltip: ({ object, layer }) => {
+      if (!object || !layer) return null;
+      const estilo = { background: token("--panel"), color: token("--ink"), border: "1px solid " + token("--line"), borderRadius: "6px", fontSize: "12px", fontFamily: "Public Sans, sans-serif" };
+      if (layer.id === "focos3d") {
+        const t = new Date(new Date(E3.datos.dias[0].fecha + "T00:00").getTime() + object[3] * 3600e3);
+        return { html: `<b>Foco VIIRS</b> · ${t.getDate()} ${MESES[t.getMonth()]}, ${String(t.getHours()).padStart(2, "0")}:${String(t.getMinutes()).padStart(2, "0")} h<br>${fmt.format(object[2])} m s. n. m. · ${fmt1.format(object[4])} MW`, style: estilo };
+      }
+      if (layer.id === "edificios") return { html: `<b>Edificación</b> · exposición ${CAT[object[4]].toLowerCase()}<br>índice ${fmt1.format(object[3])} · a ${fmt.format(object[5])} m del fuego · ${fmt.format(object[2])} m s. n. m.`, style: estilo };
+      return null;
+    },
+  });
+  cargarEvento3D("rio_tambo").then(pintarSel);
+}
+
+async function cargarEvento3D(id) {
+  pararPlay3D();
+  E3.id = id;
+  $("#cargando-3d").hidden = false;
+  const d = D.ev[id];
+  const nombres = ["natural_post", "natural_pre", "infrarrojo_post", "relieve_post"];
+  const [demImg, sev, ...imgs] = await Promise.all([cargarImagen(`data/${id}/dem.png`), cargarImagen(`data/${id}/severidad.png`), ...nombres.map(t => cargarImagen(`data/${id}/${t}.jpg`))]);
+  if (E3.id !== id) return;
+  E3.imagenes = Object.fromEntries(nombres.map((t, i) => [t, imgs[i]])); E3.sev = sev; E3.datos = d;
+  E3.dem = decodificarDEM(demImg);
+  const rango = d.dem_rango[1] - d.dem_rango[0];
+  E3.exag = rango < 250 ? 4 : rango < 600 ? 2.2 : rango < 1500 ? 1.6 : 1.3;
+  E3.malla = construirMalla(E3.dem, d.bounds, E3.exag);
+  E3.quemado = anillos3D(d.perimetro, 18);
+  pintarBotonesTextura();
+  E3.dia = d.dias.length - 1;
+  const r = $("#dia-3d"); r.max = d.dias.length - 1; r.value = E3.dia;
+  await componerTextura();
+  encuadrar3D(); pintar3D(); pintarFicha(); pintarGraficosEvento(); pintarViviendas();
+  $("#cargando-3d").hidden = true;
+}
+function pintarBotonesTextura() {
+  $("#texturas").replaceChildren(...Object.entries(NOMBRES_TEX).map(([t, n]) => el("button", { type: "button", "aria-pressed": String(t === E3.textura), text: n,
+    title: t === "infrarrojo_post" ? "Infrarrojo de onda corta (B12-B8A-B4): la vegetación se ve verde y lo quemado, rojo oscuro" : null,
+    onclick: async () => { E3.textura = t; pintarBotonesTextura(); await componerTextura(); pintar3D(); } })));
+}
+function decodificarDEM(img) {
+  const c = document.createElement("canvas"); c.width = img.width; c.height = img.height;
+  const ctx = c.getContext("2d", { willReadFrequently: true }); ctx.drawImage(img, 0, 0);
+  const px = ctx.getImageData(0, 0, c.width, c.height).data, n = c.width * c.height, z = new Float32Array(n);
+  for (let i = 0; i < n; i++) z[i] = px[i * 4] * 256 + px[i * 4 + 1] + px[i * 4 + 2] / 256 - 32768;
+  return { w: c.width, h: c.height, z };
+}
+function elevEn(lon, lat) {
+  const { w, h, z } = E3.dem, [o, s, e, n] = E3.datos.bounds;
+  const x = Math.min(w - 1.001, Math.max(0, (lon - o) / (e - o) * w - 0.5));
+  const y = Math.min(h - 1.001, Math.max(0, (n - lat) / (n - s) * h - 0.5));
+  const x0 = Math.floor(x), y0 = Math.floor(y), fx = x - x0, fy = y - y0, v = (i, j) => z[j * w + i];
+  return (v(x0, y0) * (1 - fx) + v(x0 + 1, y0) * fx) * (1 - fy) + (v(x0, y0 + 1) * (1 - fx) + v(x0 + 1, y0 + 1) * fx) * fy;
+}
+function construirMalla(dem, b, exag) {
+  const { w, h, z } = dem, [o, s, e, n] = b, lon0 = (o + e) / 2, lat0 = (s + n) / 2;
+  // metros por grado con la misma Tierra que deck.gl, para que la malla calce con focos y bordes
+  const mg = 40030000 / 360, mx = mg * Math.cos(lat0 * Math.PI / 180), my = mg;
+  const pos = new Float32Array(w * h * 3), uv = new Float32Array(w * h * 2), nor = new Float32Array(w * h * 3);
+  const dx = (e - o) / w * mx, dy = (n - s) / h * my;
+  for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) {
+    const k = j * w + i, lon = o + (i + 0.5) / w * (e - o), lat = n - (j + 0.5) / h * (n - s);
+    pos[k * 3] = (lon - lon0) * mx; pos[k * 3 + 1] = (lat - lat0) * my; pos[k * 3 + 2] = z[k] * exag;
+    uv[k * 2] = (i + 0.5) / w; uv[k * 2 + 1] = (j + 0.5) / h;
+    const zl = z[j * w + Math.max(0, i - 1)], zr = z[j * w + Math.min(w - 1, i + 1)];
+    const zu = z[Math.max(0, j - 1) * w + i], zd = z[Math.min(h - 1, j + 1) * w + i];
+    const gx = (zr - zl) * exag / (2 * dx), gy = (zu - zd) * exag / (2 * dy), len = Math.hypot(gx, gy, 1);
+    nor[k * 3] = -gx / len; nor[k * 3 + 1] = -gy / len; nor[k * 3 + 2] = 1 / len;
+  }
+  const idx = new Uint32Array((w - 1) * (h - 1) * 6); let p = 0;
+  for (let j = 0; j < h - 1; j++) for (let i = 0; i < w - 1; i++) {
+    const a = j * w + i, b2 = a + 1, c = a + w, d = c + 1;
+    idx[p++] = a; idx[p++] = c; idx[p++] = b2; idx[p++] = b2; idx[p++] = c; idx[p++] = d;
+  }
+  return { centro: [lon0, lat0], mesh: { attributes: { POSITION: { value: pos, size: 3 }, NORMAL: { value: nor, size: 3 }, TEXCOORD_0: { value: uv, size: 2 } }, indices: { value: idx, size: 1 }, mode: 4 } };
+}
+function anillos3D(g, dz) {
+  if (!g) return [];
+  return (g.type === "Polygon" ? [g.coordinates] : g.coordinates)
+    .flatMap(poli => poli.map(anillo => anillo.map(([lon, lat]) => [lon, lat, elevEn(lon, lat) * E3.exag + dz])));
+}
+async function componerTextura() {
+  const base = E3.imagenes[E3.textura];
+  const c = document.createElement("canvas"); c.width = base.width; c.height = base.height;
+  const ctx = c.getContext("2d"); ctx.drawImage(base, 0, 0);
+  if ($("#c-sev").checked && E3.sev) ctx.drawImage(E3.sev, 0, 0, c.width, c.height);
+  E3.tex = c; E3.texVersion = (E3.texVersion || 0) + 1;
+}
+function encuadrar3D() {
+  const [o, s, e, n] = E3.datos.bounds, caja = $("#escena");
+  const vp = new deck.WebMercatorViewport({ width: caja.clientWidth || 800, height: caja.clientHeight || 500 }).fitBounds([[o, s], [e, n]], { padding: 10 });
+  const elevMedia = (E3.datos.dem_rango[0] + E3.datos.dem_rango[1]) / 2 * E3.exag;
+  E3.vista = { longitude: vp.longitude, latitude: vp.latitude - (n - s) * 0.14, zoom: vp.zoom + 0.3, pitch: 58, bearing: -18, maxPitch: 80, position: [0, 0, elevMedia] };
+  $("#brujula svg").style.transform = `rotate(18deg)`;
+  E3.deck.setProps({ initialViewState: { ...E3.vista, transitionDuration: reduceMotion ? 0 : 900, transitionInterpolator: new deck.FlyToInterpolator() } });
+}
+function pintar3D() {
+  const d = E3.datos; if (!d) return;
+  const dia = E3.dia, ex = E3.exag;
+  const hoy = [255, 64, 32], prev = [255, 170, 60], viejo = [255, 236, 170];
+  const focos = $("#c-focos").checked ? d.focos.filter(f => f[5] <= dia) : [];
+  const zona = $("#c-focos").checked && d.zonas[dia] ? anillos3D(d.zonas[dia], 22) : [];
+  const capas = [
+    new deck.SimpleMeshLayer({ id: "terreno", data: [{}], mesh: E3.malla.mesh, texture: E3.tex,
+      getPosition: () => [...E3.malla.centro, 0], getColor: [255, 255, 255], sizeScale: 1,
+      material: { ambient: 0.7, diffuse: 0.45, shininess: 0, specularColor: [0, 0, 0] }, updateTriggers: { texture: E3.texVersion } }),
+    new deck.PathLayer({ id: "quemado-halo", data: E3.quemado, getPath: a => a, widthUnits: "pixels", getWidth: 4, getColor: [20, 12, 10, 140] }),
+    new deck.PathLayer({ id: "quemado", data: E3.quemado, getPath: a => a, widthUnits: "pixels", getWidth: 1.6, getColor: [255, 255, 255, 235] }),
+    new deck.PathLayer({ id: "zona-viirs", data: zona, getPath: a => a, widthUnits: "pixels", getWidth: 2, getColor: [...hoy, 255],
+      getDashArray: [3, 2], dashJustified: true, extensions: [new deck.PathStyleExtension({ dash: true })] }),
+    $("#c-edif").checked && new deck.ColumnLayer({ id: "edificios", data: d.edificios, pickable: true, diskResolution: 8, radius: 16, extruded: true,
+      getPosition: b => [b[0], b[1], elevEn(b[0], b[1]) * ex + 1], getElevation: b => b[4] === 0 ? 12 : 25 + b[3] * 3.2,
+      getFillColor: b => [...CAT_COLOR[b[4]], b[4] === 0 ? 150 : 255], material: { ambient: 0.6, diffuse: 0.6 } }),
+    new deck.ScatterplotLayer({ id: "focos3d", data: focos, pickable: true, billboard: true,
+      getPosition: f => [f[0], f[1], f[2] * ex + 40], radiusUnits: "pixels",
+      getRadius: f => (f[5] === dia ? 5 : 3.2), stroked: true, lineWidthUnits: "pixels", getLineWidth: f => (f[5] === dia ? 1.5 : 0.8),
+      getFillColor: f => (f[5] === dia ? hoy : f[5] >= dia - 2 ? prev : [...viejo, 190]), getLineColor: [40, 20, 10, 220],
+      updateTriggers: { getFillColor: dia, getRadius: dia, getLineWidth: dia } }),
+  ].filter(Boolean);
+  E3.deck.setProps({ layers: capas });
+  const f = d.dias[dia];
+  $("#etq-dia").textContent = `${fechaCorta(f.fecha)} · ${fmt.format(f.focos)} focos`;
+  graficoDias(d, dia);
+  pintarLeyenda();
+}
+function pintarLeyenda() {
+  const sev = E3.datos.clases_severidad.map(c => `<span><i style="background:rgb(${c.color})"></i>Severidad ${c.clase.toLowerCase()}</span>`).join("");
+  const ed = [3, 2, 1, 4].map(k => `<span><i style="background:rgb(${CAT_COLOR[k]})"></i>Edificación: ${CAT[k].toLowerCase()}</span>`).join("");
+  $("#leyenda3d").innerHTML = `${$("#c-sev").checked ? sev : ""}<span><i style="background:#fff;height:2px"></i>Perímetro quemado (Sentinel-2)</span>${$("#c-edif").checked ? ed : ""}${$("#c-focos").checked ? `<span><i style="background:rgb(255,64,32);border-radius:50%"></i>Focos del día · <i style="background:rgb(255,170,60);border-radius:50%;margin-left:4px"></i>1–2 días antes</span>` : ""}`;
+}
+function play3D() {
+  const d = E3.datos; if (!d) return;
+  const b = $("#play-3d"); b.textContent = "■"; b.setAttribute("aria-pressed", "true"); b.setAttribute("aria-label", "Detener");
+  if (E3.dia >= d.dias.length - 1) E3.dia = -1;
+  const paso = () => {
+    E3.dia++; $("#dia-3d").value = E3.dia; pintar3D();
+    if (E3.dia >= d.dias.length - 1) { pararPlay3D(); return; }
+    E3.play = setTimeout(paso, reduceMotion ? 900 : 600);
+  };
+  paso();
+}
+function pararPlay3D() {
+  clearTimeout(E3.play); E3.play = null;
+  const b = $("#play-3d"); b.textContent = "▶"; b.setAttribute("aria-pressed", "false"); b.setAttribute("aria-label", "Reproducir el avance");
+}
+function pintarFicha() {
+  const d = E3.datos;
+  $("#titulo3d").textContent = `${d.nombre}: relieve real con Sentinel-2 encima`;
+  const clave = (et, v, u) => el("div", {}, el("span", { text: et }), el("b", {}, v, u ? el("small", { text: u }) : null));
+  $("#ficha3d").replaceChildren(
+    el("div", {}, el("h3", { text: d.nombre, style: "font-size:1.35rem" }), el("span", { class: "tenue", style: "font-size:.84rem", text: `${d.provincia} · ${d.departamento}` })),
+    activo(d) ? el("span", { class: "pill activo", text: "Activo al 20 de octubre", style: "justify-self:start" }) : el("span", { class: "pill calma", text: `Sin focos desde el ${fechaCorta(d.ultimo_foco)}`, style: "justify-self:start" }),
+    el("div", { class: "claves" },
+      clave("Área quemada", fmt.format(d.ha_quemadas), "ha"),
+      clave("Focos VIIRS", fmt.format(d.focos_incendio)),
+      clave("Edificaciones ≤ 1 km", fmt.format(d.edificaciones_1km)),
+      clave("Exposición alta", fmt.format(d.edificaciones.Alta))),
+    el("dl", { class: "datos" },
+      ...[["Primer foco", `${fechaCorta(d.inicio)}, ${d.inicio.slice(11, 16)} h`], ["Último foco", `${fechaCorta(d.ultimo_foco)}, ${d.ultimo_foco.slice(11, 16)} h`],
+        ["Potencia radiativa", `${fmt.format(d.frp_total_mw)} MW`], ["Altitud quemada", `${fmt.format(d.altitud_quemada_m[0])}–${fmt.format(d.altitud_quemada_m[2])} m`],
+        ["Pendiente mediana", `${fmt1.format(d.pendiente_mediana)}°`], ["Viento de la tarde (pronóstico)", `${fmt.format(d.viento.velocidad_media_kmh)} km/h hacia ${rumbo(d.viento.hacia_grados)}`],
+        ["Exageración vertical", `×${fmt1.format(E3.exag)}`]].flatMap(([a, b]) => [el("dt", { text: a }), el("dd", { text: b })])));
+}
+const rumbo = g => ["el norte", "el noreste", "el este", "el sureste", "el sur", "el suroeste", "el oeste", "el noroeste"][Math.round(g / 45) % 8];
+function pintarGraficosEvento() {
+  const d = E3.datos;
+  const colCob = { Bosque: "#2f6b3a", Matorral: "#8a8f3c", Pastizal: "#c9a84a", Cultivo: "#b6774e", Construido: "#7d7d7d" };
+  barrasH("#g-cobertura", d.por_cobertura.filter(f => f.ha >= 0.5).map(f => ({ k: f.cobertura, v: f.ha })), { etiqueta: 110, color: f => colCob[f.k] || token("--muted") });
+  barrasH("#g-severidad", d.severidad.map((f, i) => ({ k: f.clase, v: f.ha, i })), { etiqueta: 110, color: (f, i) => `rgb(${d.clases_severidad[i].color})` });
+}
+
+/* ------------------------------------------------------------- viviendas */
+function pintarViviendas() {
+  const d = E3.datos;
+  $("#titulo-viv").textContent = `${d.nombre}: ${fmt.format(d.edificaciones_2km)} edificaciones a ≤ 2 km del fuego, de ${fmt.format(d.edificaciones_total)} en la zona`;
+  const orden = [4, 3, 2, 1];
+  barrasH("#g-categorias", orden.map(k => ({ k: CAT[k], v: d.edificaciones[CAT[k]], c: k })), { etiqueta: 170, unidad: "", color: f => `rgb(${CAT_COLOR[f.c]})` });
+  const cortes = [250, 500, 1000, 2000];
+  barrasH("#g-distancia", cortes.map(c => ({ k: `a ≤ ${fmt.format(c)} m`, v: d.edificios.filter(b => b[5] <= c).length })), { etiqueta: 170, unidad: "", color: () => token("--scar") });
+  const catNum = Object.fromEntries(Object.entries(CAT).map(([k, v]) => [v, k]));
+  $("#tabla-viv").replaceChildren(...d.top_expuestas.map((b, i) => el("tr", {},
+    el("td", { class: "num tenue", text: i + 1 }),
+    el("td", {}, el("button", { class: "copiar", type: "button", title: "Copiar Plus Code", text: b.plus_code, onclick: ev => copiar(b.plus_code, ev.currentTarget) })),
+    el("td", {}, el("span", { class: `cat cat-${catNum[b.categoria]}`, text: b.categoria })),
+    el("td", { class: "n" }, el("span", { class: "barrita", style: `width:${Math.round(b.indice * 0.6)}px` }), fmt1.format(b.indice)),
+    el("td", { class: "n", text: `${fmt.format(b.dist_m)} m` }),
+    el("td", { class: b.viento ? "si" : "no", text: b.viento ? "a favor" : "no" }),
+    el("td", { class: b.cuesta_arriba ? "si" : "no", text: b.cuesta_arriba ? "sí" : "no" }),
+    el("td", { class: "n", text: `${fmt.format(b.vegetacion * 100)} %` }),
+    el("td", { class: "n", text: `${fmt.format(b.area_m2)} m²` }))));
+}
+async function copiar(texto, boton) {
+  try { await navigator.clipboard.writeText(texto); const t = boton.textContent; boton.textContent = "Copiado"; setTimeout(() => (boton.textContent = t), 1200); }
+  catch { const r = document.createRange(); r.selectNodeContents(boton); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+}
+
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { if (D.nac) { pintarMapa(); pintarSensibilidad(); pintarClimas(); if (E3.datos) { pintar3D(); pintarGraficosEvento(); pintarViviendas(); } } });
+iniciar().catch(err => { $("#cargando-3d").textContent = "No se pudieron cargar los datos: " + err.message; console.error(err); });
+</script>
+</body></html>
