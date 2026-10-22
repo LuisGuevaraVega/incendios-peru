@@ -3,9 +3,9 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-</head><body>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:ital,wght@0,400..700;1,400&display=swap">
 <style>
+</head><body>
 /* Informe de campo en una sola página: barra fija, el visor 3D al centro, paneles de datos en grilla de dos columnas */
 :root {
   --bg: #eceee9; --panel: #f8f9f6; --ink: #17201e; --muted: #5b6662; --line: #cdd3cd;
@@ -369,7 +369,7 @@ function pintarResumen() {
         kpi(fmt.format(d.edificaciones_1km), "edificaciones a ≤ 1 km del fuego"),
         kpi(fmt.format(d.edificaciones.Alta), "con exposición alta")),
       el("p", { class: "tenue", style: "font-size:.86rem",
-        text: `${fmt.format(d.focos_incendio)} focos VIIRS desde el ${fechaCorta(d.inicio)} · umbral dNBR ${fmt1.format(d.umbral_dnbr).replace(".", ",")} · ${fmt1.format(d.cobertura_post_pct)} % de la zona vista sin nubes después del fuego · altitud ${fmt.format(d.altitud_quemada_m[0])}–${fmt.format(d.altitud_quemada_m[2])} m`.replaceAll(".", "§").replaceAll(",", ".").replaceAll("§", ",") }));
+        text: `${fmt.format(d.focos_incendio)} focos VIIRS desde el ${fechaCorta(d.inicio)} · umbral dNBR ${d.umbral_dnbr.toFixed(2)} · ${fmt1.format(d.cobertura_post_pct)} % de la zona vista sin nubes después del fuego · altitud ${fmt.format(d.altitud_quemada_m[0])}–${fmt.format(d.altitud_quemada_m[2])} m` }));
   }));
   const ch = D.ev.chichas, rt = D.ev.rio_tambo;
   const s27 = ch.sensibilidad.find(x => x.umbral === 0.27 && x.sembrado_focos).ha;
@@ -719,7 +719,7 @@ function pintarViviendas() {
 }
 async function copiar(texto, boton) {
   try { await navigator.clipboard.writeText(texto); const t = boton.textContent; boton.textContent = "Copiado"; setTimeout(() => (boton.textContent = t), 1200); }
-  catch { const r = document.createRange(); r.selectNodeContents(boton); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+  catch (e) { const r = document.createRange(); r.selectNodeContents(boton); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
 }
 
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { if (D.nac) { pintarMapa(); pintarSensibilidad(); pintarClimas(); if (E3.datos) { pintar3D(); pintarGraficosEvento(); pintarViviendas(); } } });

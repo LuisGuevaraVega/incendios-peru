@@ -367,7 +367,7 @@ function pintarResumen() {
         kpi(fmt.format(d.edificaciones_1km), "edificaciones a ≤ 1 km del fuego"),
         kpi(fmt.format(d.edificaciones.Alta), "con exposición alta")),
       el("p", { class: "tenue", style: "font-size:.86rem",
-        text: `${fmt.format(d.focos_incendio)} focos VIIRS desde el ${fechaCorta(d.inicio)} · umbral dNBR ${fmt1.format(d.umbral_dnbr).replace(".", ",")} · ${fmt1.format(d.cobertura_post_pct)} % de la zona vista sin nubes después del fuego · altitud ${fmt.format(d.altitud_quemada_m[0])}–${fmt.format(d.altitud_quemada_m[2])} m`.replaceAll(".", "§").replaceAll(",", ".").replaceAll("§", ",") }));
+        text: `${fmt.format(d.focos_incendio)} focos VIIRS desde el ${fechaCorta(d.inicio)} · umbral dNBR ${d.umbral_dnbr.toFixed(2)} · ${fmt1.format(d.cobertura_post_pct)} % de la zona vista sin nubes después del fuego · altitud ${fmt.format(d.altitud_quemada_m[0])}–${fmt.format(d.altitud_quemada_m[2])} m` }));
   }));
   const ch = D.ev.chichas, rt = D.ev.rio_tambo;
   const s27 = ch.sensibilidad.find(x => x.umbral === 0.27 && x.sembrado_focos).ha;
@@ -717,7 +717,7 @@ function pintarViviendas() {
 }
 async function copiar(texto, boton) {
   try { await navigator.clipboard.writeText(texto); const t = boton.textContent; boton.textContent = "Copiado"; setTimeout(() => (boton.textContent = t), 1200); }
-  catch { const r = document.createRange(); r.selectNodeContents(boton); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+  catch (e) { const r = document.createRange(); r.selectNodeContents(boton); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
 }
 
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { if (D.nac) { pintarMapa(); pintarSensibilidad(); pintarClimas(); if (E3.datos) { pintar3D(); pintarGraficosEvento(); pintarViviendas(); } } });
