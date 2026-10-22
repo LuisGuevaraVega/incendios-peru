@@ -105,9 +105,4 @@ docs/         el mismo dashboard para GitHub Pages + data/ que lee
 data/processed/  resultados: resumen.json, CSV, GeoJSON por incendio
 figs/         figuras
 ```
-
-## Licencias
-
-Código: MIT. Datos de terceros con sus licencias: Copernicus Sentinel-2 y DEM (Copernicus), ESA WorldCover (CC BY 4.0), Google Open Buildings (CC BY 4.0 y ODbL), Open-Meteo (CC BY 4.0), INPE Queimadas, NASA FIRMS.
-
-Hecho con Claude Code.
+Datos de terceros con sus licencias: Copernicus Sentinel-2 y DEM (Copernicus), ESA WorldCover (CC BY 4.0), Google Open Buildings (CC BY 4.0 y ODbL), Open-Meteo (CC BY 4.0), INPE Queimadas, NASA FIRMS.
