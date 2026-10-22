@@ -409,7 +409,7 @@ function pintarSensibilidad() {
     const t = d.sensibilidad;
     const min = d3.min(t, f => f.ha), max = d3.max(t, f => f.ha);
     $(`#t-sens-${j}`).textContent = `${d.nombre}: de ${fmt.format(min)} a ${fmt.format(max)} ha`;
-    const filas = t.map(f => ({ k: `${f.posterior.replaceAll("2026-", "").split(" + ").map(fechaCorta).join("+")} · ${String(f.umbral.toFixed(2)).replace(".", ",")} · ${f.sembrado_focos ? "sembrado" : "sin sembrar"}`,
+    const filas = t.map(f => ({ k: `${f.posterior.split(" + ").map(fechaCorta).join("+")} · umbral ${String(f.umbral.toFixed(2)).replace(".", ",")} · ${f.sembrado_focos ? "con focos" : "sin focos"}`,
       v: f.ha, usado: f.posterior === d.post.join(" + ") && Math.abs(f.umbral - d.umbral_dnbr) < 0.006 && f.sembrado_focos }));
     barrasH(`#g-sens-${j}`, filas, { etiqueta: 215, color: f => f.usado ? token("--ember") : token("--line") });
   });
