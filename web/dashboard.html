@@ -30,6 +30,7 @@
   --scene: #070b0a; --sombra: 0 1px 2px rgb(0 0 0 / .4), 0 4px 18px rgb(0 0 0 / .3); color-scheme: dark }
 
 * { box-sizing: border-box }
+[hidden] { display: none !important }
 body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--f-body); margin: 0 }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--panel) }
 .envoltura { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
@@ -260,7 +261,7 @@ footer { padding-block: 40px 60px; color: var(--muted); font-size: .84rem; displ
       </li>
     </ol>
     <div class="visor">
-      <div style="display:grid;gap:10px;min-width:0">
+      <div style="display:grid;gap:10px;min-width:0;align-content:start">
         <div class="escena-caja">
           <div id="escena"></div>
           <div class="cargando" id="cargando-3d">Cargando terreno…</div>
