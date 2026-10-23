@@ -496,7 +496,13 @@ const CAT_COLOR = { 4: [20, 20, 20], 3: [215, 25, 28], 2: [240, 138, 75], 1: [24
 const D = { ev: {} };
 
 async function json(url) { const r = await fetch(url); if (!r.ok) throw new Error(url + " " + r.status); return r.json(); }
-function cargarImagen(src) { return new Promise((ok, mal) => { const i = new Image(); i.onload = () => ok(i); i.onerror = mal; i.src = src; }); }
+// la imagen llega por fetch y se abre desde un blob local: así el canvas puede leer sus píxeles aunque el visor sirva los archivos desde otro origen
+async function cargarImagen(src) {
+  const r = await fetch(src); if (!r.ok) throw new Error(src + " " + r.status);
+  const url = URL.createObjectURL(await r.blob());
+  return new Promise((ok, mal) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => mal(new Error("No se pudo abrir " + src)); i.src = url; });
+}
+function fallo3D(err) { console.error(err); const c = $("#cargando-3d"); c.hidden = false; c.textContent = "No se pudo cargar el terreno 3D. Recarga la página para intentarlo de nuevo."; }
 
 async function iniciar() {
   const [nac, dep, ...evs] = await Promise.all([json("data/nacional.json"), json("data/departamentos.geojson"),
@@ -661,7 +667,7 @@ function pintarMapa() {
       getFillColor: p => p[2] >= ultimo - 1 ? [...fuego, 230] : [...fuego.map((c, i) => Math.round(c * 0.55 + tenue[i] * 0.45)), 120],
       updateTriggers: { getFillColor: [M.dias, token("--ember")], getRadius: M.dias } }),
     new deck.TextLayer({ id: "etiquetas", data: CLAVES.map(k => D.ev[k]), getPosition: d => [(d.bbox[0] + d.bbox[2]) / 2, d.bbox[3]],
-      getText: d => d.nombre, getSize: 13, getColor: [...rgb("--ink"), 255], fontFamily: "Public Sans, sans-serif", fontWeight: 700,
+      getText: d => d.nombre, characterSet: "auto", getSize: 13, getColor: [...rgb("--ink"), 255], fontFamily: "Public Sans, sans-serif", fontWeight: 700,
       getPixelOffset: [0, -12], background: true, getBackgroundColor: [...rgb("--panel"), 225], backgroundPadding: [4, 2] }),
   ] });
   graficoNacional(desde);
@@ -689,7 +695,7 @@ const NOMBRES_TEX = { natural_post: "Después", natural_pre: "Antes", infrarrojo
 function iniciar3D() {
   // el mismo selector arriba del visor y en la sección de edificaciones
   const pintarSel = () => ["#sel-evento", "#sel-evento-viv"].forEach(s => $(s).replaceChildren(...CLAVES.map(k => el("button", { type: "button", "aria-pressed": String(E3.id === k),
-    text: `${D.ev[k].nombre} (${D.ev[k].departamento})`, onclick: () => { if (E3.id !== k) { const p = cargarEvento3D(k); pintarSel(); p.then(pintarSel); } } }))));
+    text: `${D.ev[k].nombre} (${D.ev[k].departamento})`, onclick: () => { if (E3.id !== k) { const p = cargarEvento3D(k); pintarSel(); p.then(pintarSel, fallo3D); } } }))));
   $("#dia-3d").addEventListener("input", ev => { pararPlay3D(); E3.dia = +ev.target.value; pintar3D(); });
   $("#play-3d").addEventListener("click", () => (E3.play ? pararPlay3D() : play3D()));
   for (const id of ["#c-sev", "#c-edif", "#c-focos"]) $(id).addEventListener("change", () => componerTextura().then(pintar3D));
@@ -712,7 +718,7 @@ function iniciar3D() {
       return null;
     },
   });
-  cargarEvento3D("rio_tambo").then(pintarSel);
+  cargarEvento3D("rio_tambo").then(pintarSel, fallo3D);
 }
 
 async function cargarEvento3D(id) {
