@@ -1,6 +1,6 @@
 # Incendios en el Perú vistos desde el espacio: Chichas y Río Tambo
 
-**Luis Gabriel Guevara Vega** · Ciencia de Datos con Python · Universidad del Pacífico · datos al **20 de octubre de 2026**
+**Luis Gabriel Guevara Vega** · Python Intermedio · Diplomatura de QLab · Pontificia Universidad Católica del Perú (PUCP) · datos al **20 de octubre de 2026**
 
 - **Dashboard 3D:** [claude.ai/artifact/5zC59rYbPi2SQ47PrArLYL](https://claude.ai/artifact/5zC59rYbPi2SQ47PrArLYL) · copia en GitHub Pages: [luisguevaravega.github.io/incendios-peru](https://luisguevaravega.github.io/incendios-peru/)
 - **Diapositivas:** [claude.ai/artifact/PVJG8uQaNE7VpfKT9hgWjy](https://claude.ai/artifact/PVJG8uQaNE7VpfKT9hgWjy)
