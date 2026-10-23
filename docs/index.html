@@ -1,11 +1,20 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Chichas y Río Tambo en 3D</title>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Incendios vistos desde el espacio</title>
 <meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Área quemada, vegetación afectada y edificaciones expuestas en los incendios de Chichas (Arequipa) y Río Tambo (Junín), octubre de 2026, con Sentinel-2 y Google Open Buildings.">
+<meta property="og:title" content="Incendios de Chichas y Río Tambo vistos desde el espacio">
+<meta property="og:description" content="4,170 ha quemadas y 648 edificaciones a 1 km o menos del fuego. Análisis con Sentinel-2, VIIRS, WorldCover y Google Open Buildings.">
+<meta property="og:image" content="https://luisguevaravega.github.io/incendios-peru/assets/compartir.png">
+<meta property="og:url" content="https://luisguevaravega.github.io/incendios-peru/">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:ital,wght@0,400..700;1,400&display=swap">
 <style>
-</head><body>
 /* Informe de campo en una sola página: barra fija, el visor 3D al centro, paneles de datos en grilla de dos columnas */
 :root {
   --bg: #eceee9; --panel: #f8f9f6; --ink: #17201e; --muted: #5b6662; --line: #cdd3cd;
@@ -69,7 +78,7 @@ section { padding-block: 44px 8px; display: grid; gap: 20px; scroll-margin-top: 
 .hallazgos li::before { content: counter(h); font: 700 1.3rem/1.1 var(--f-display); color: var(--ember) }
 
 .glosario { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 12px }
-.glosario div { border-top: 2px solid var(--line); padding-top: 10px; display: grid; gap: 4px }
+.glosario div { border-top: 2px solid var(--line); padding-top: 10px; display: grid; gap: 4px; align-content: start }
 .glosario dt { font-weight: 700 } .glosario dd { margin: 0; color: var(--muted); font-size: .9rem }
 
 /* visor 3D */
@@ -133,21 +142,79 @@ tr:last-child td { border-bottom: 0 }
 .lista-top li.marcado { color: var(--ember); font-weight: 650 }
 
 .tabla-decisiones td:first-child { font-weight: 600 }
+
+/* portada: cifras principales y accesos */
+header.portada .lede b { color: var(--ink) }
+.cifras { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-block: 1px solid var(--line); margin-top: 6px }
+.cifras div { display: grid; gap: 4px; align-content: start; padding: 16px 18px 16px 0 }
+.cifras div + div { border-left: 1px solid var(--line); padding-left: 18px }
+.cifras b { font: 760 clamp(1.7rem, 3.4vw, 2.4rem)/1 var(--f-display); font-stretch: 80%; color: var(--ember) }
+.cifras span { font-size: .84rem; color: var(--muted); line-height: 1.4 }
+@media (max-width: 760px) {
+  .cifras { grid-template-columns: repeat(2, minmax(0, 1fr)) }
+  .cifras div:nth-child(3) { border-left: 0; padding-left: 0 }
+  .cifras div:nth-child(n+3) { border-top: 1px solid var(--line) }
+}
+.acciones { display: flex; flex-wrap: wrap; gap: 10px }
+.boton { display: inline-flex; align-items: center; font: 600 .88rem var(--f-body); padding: 9px 15px; border-radius: 7px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); text-decoration: none }
+.boton:hover { border-color: var(--ink) }
+.boton.principal { background: var(--ember); border-color: var(--ember); color: #fff }
+.boton.principal:hover { filter: brightness(1.08) }
+nav.barra a[aria-current="true"] { background: var(--ink); color: var(--bg) }
+
+/* textos de apoyo de cada gráfico */
+.nota { font-size: .84rem; color: var(--muted); line-height: 1.5 }
+.lectura { font-size: .9rem; line-height: 1.5; border-top: 1px dashed var(--line); padding-top: 9px }
+.lectura:empty { display: none }
+.lectura::before { content: "Lectura · "; font: 700 .72rem var(--f-body); letter-spacing: .1em; text-transform: uppercase; color: var(--ember) }
+.guia { display: grid; gap: 10px }
+.guia ol { margin: 0; padding: 0; list-style: none; counter-reset: g; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 12px }
+.guia li { counter-increment: g; display: grid; grid-template-columns: 26px 1fr; gap: 8px; font-size: .9rem; color: var(--muted) }
+.guia li::before { content: counter(g); width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--ember); color: var(--ember); font: 700 .78rem/19px var(--f-body); text-align: center }
+.guia li b { color: var(--ink); display: block }
+.pasos { margin: 0; padding: 0; list-style: none; counter-reset: p; display: flex; flex-wrap: wrap; gap: 12px 26px; align-items: end }
+.pasos li { counter-increment: p; display: grid; gap: 6px; min-width: 0 }
+.pasos li > b { font: 600 .74rem var(--f-body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted) }
+.pasos li > b::before { content: counter(p) " · "; color: var(--ember) }
+.capas { display: flex; flex-wrap: wrap; gap: 6px 14px; min-height: 38px; align-items: center }
+.formula strong { color: var(--ink) }
+.conclusiones { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 0 28px }
+.conclusiones article { display: grid; gap: 8px; align-content: start; border-top: 2px solid var(--ink); padding-block: 14px 18px }
+.conclusiones p { font-size: .92rem; color: var(--muted) }
+.lista-metodo { margin: 0; padding-left: 20px; display: grid; gap: 7px; font-size: .9rem }
+.creditos p { font-size: .92rem }
+.cita { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; background: var(--bg); border-radius: 8px; padding: 10px 12px }
+.cita span { font-size: .8rem; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere }
+.usado-etq { fill: var(--ember) !important; font-weight: 700 }
 footer { padding-block: 40px 60px; color: var(--muted); font-size: .84rem; display: grid; gap: 8px }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important } }
 </style>
+</head>
+<body>
 
 <header class="portada envoltura">
-  <span class="ceja">Ciencia de Datos con Python · Universidad del Pacífico · datos al 20 de octubre de 2026</span>
-  <h1>Chichas y Río Tambo, vistos desde el espacio</h1>
-  <p class="lede">Dos incendios de octubre de 2026, uno en la puna de Arequipa y otro en la selva central. Cuánto se quemó según Sentinel-2, qué tipo de vegetación ardió y qué edificaciones de Google Open Buildings quedan expuestas.</p>
-  <span class="firma">Luis Gabriel Guevara Vega · datos abiertos: INPE, NASA FIRMS, Sentinel-2, ESA WorldCover, Copernicus DEM, Open-Meteo y Google Open Buildings</span>
+  <span class="ceja">Análisis geoespacial con datos abiertos · Perú · datos al 20 de octubre de 2026</span>
+  <h1>Incendios de Chichas y Río Tambo vistos desde el espacio</h1>
+  <p class="lede">Medí con imágenes satelitales dos de los incendios más grandes de octubre de 2026: uno en la puna de Arequipa y otro en la selva central de Junín. La página responde tres preguntas: <b>cuánto se quemó</b>, <b>qué tipo de vegetación ardió</b> y <b>qué edificaciones quedan más expuestas al fuego</b>.</p>
+  <div class="cifras" aria-label="Cifras principales">
+    <div><b class="num">4,170 ha</b><span>quemadas en total, medidas con Sentinel-2 (1,475 en Chichas y 2,695 en Río Tambo)</span></div>
+    <div><b class="num">927</b><span>focos de calor VIIRS detectados en los dos incendios</span></div>
+    <div><b class="num">648</b><span>edificaciones de Google Open Buildings a 1 km o menos del fuego</span></div>
+    <div><b class="num">322</b><span>edificaciones con exposición alta, para priorizar en terreno</span></div>
+  </div>
+  <div class="acciones">
+    <a class="boton principal" href="#incendio3d">Explorar el incendio en 3D</a>
+    <a class="boton" href="#viviendas">Ver las edificaciones expuestas</a>
+    <a class="boton" href="https://github.com/LuisGuevaraVega/incendios-peru">Código y datos en GitHub</a>
+  </div>
+  <span class="firma">Luis Gabriel Guevara Vega · Ciencia de Datos con Python, Universidad del Pacífico · Fuentes: INPE, NASA FIRMS, Sentinel-2, ESA WorldCover, Copernicus DEM, Open-Meteo y Google Open Buildings</span>
 </header>
 
 <nav class="barra" aria-label="Secciones">
   <div class="envoltura">
-    <a href="#resumen">Resumen</a><a href="#incendio3d">Incendio en 3D</a><a href="#viviendas">Viviendas expuestas</a>
-    <a href="#peru">Perú</a><a href="#decisiones">Decisiones de método</a><a href="#clima">Clima</a><a href="#fuentes">Fuentes y límites</a>
+    <a href="#resumen">Resumen</a><a href="#incendio3d">El incendio en 3D</a><a href="#viviendas">Edificaciones expuestas</a>
+    <a href="#peru">Contexto nacional</a><a href="#decisiones">Robustez de la cifra</a><a href="#clima">Clima</a>
+    <a href="#conclusiones">Conclusiones</a><a href="#fuentes">Método y fuentes</a>
   </div>
 </nav>
 
@@ -155,75 +222,123 @@ footer { padding-block: 40px 60px; color: var(--muted); font-size: .84rem; displ
   <section id="resumen">
     <div class="cabeza">
       <span class="ceja">Resumen</span>
-      <h2>Dos incendios, dos paisajes, dos umbrales</h2>
+      <h2>Dos incendios en dos paisajes distintos, medidos con el mismo método</h2>
+      <p class="tenue">Cada ficha resume un incendio: dónde ocurrió, si sigue activo, cuántas hectáreas se quemaron y cuántas edificaciones hay cerca. Debajo están los tres hallazgos principales y las definiciones necesarias para leer el resto de la página.</p>
     </div>
     <div class="fichas" id="fichas"></div>
     <div class="panel">
       <h3>Tres hallazgos</h3>
       <ol class="hallazgos" id="hallazgos"></ol>
     </div>
+    <div class="guia">
+      <h3>Cómo usar esta página</h3>
+      <ol>
+        <li><span><b>Lee el resumen.</b> Las fichas y los hallazgos dan las cifras clave en un minuto.</span></li>
+        <li><span><b>Explora el incendio en 3D.</b> Elige Chichas o Río Tambo, cambia la imagen de fondo y mueve la línea de tiempo para ver cómo avanzaron los focos.</span></li>
+        <li><span><b>Revisa las edificaciones.</b> La tabla ordena las más expuestas. Copia su Plus Code y pégalo en Google Maps para ubicarlas.</span></li>
+        <li><span><b>Evalúa la solidez de la cifra.</b> La sección de robustez muestra cuánto cambian las hectáreas con otras decisiones razonables.</span></li>
+      </ol>
+    </div>
     <dl class="glosario">
-      <div><dt>Foco de calor</dt><dd>Un píxel VIIRS de 375 m más caliente de lo esperado. El satélite pasa a las ~01:30 y ~13:30 h. Un foco no es un incendio.</dd></div>
-      <div><dt>Incendio</dt><dd>Focos encadenados a ≤ 1 km y ≤ 48 h entre sí.</dd></div>
-      <div><dt>Área quemada (dNBR)</dt><dd>Caída del índice NBR de Sentinel-2 entre una imagen previa y una posterior, por encima de un umbral y tocando un foco.</dd></div>
-      <div><dt>Exposición</dt><dd>Índice 0–100 por edificación: cercanía al fuego, viento, pendiente y vegetación. Ordena dónde mirar; no predice daños.</dd></div>
+      <div><dt>Foco de calor</dt><dd>Un píxel de 375 m donde el sensor VIIRS detectó una temperatura anómala. Los satélites pasan hacia la 01:30 h y las 13:30 h. Un foco indica fuego, pero no mide su tamaño.</dd></div>
+      <div><dt>Incendio</dt><dd>Grupo de focos encadenados a 1 km o menos y 48 horas o menos entre sí.</dd></div>
+      <div><dt>Área quemada (dNBR)</dt><dd>Superficie donde el índice NBR de Sentinel-2 cayó entre una imagen previa y una posterior al fuego. Se mide a 20 m, mucho más fino que un foco.</dd></div>
+      <div><dt>Severidad</dt><dd>Qué tan fuerte fue el daño a la vegetación según la caída del NBR: baja, moderada-baja, moderada-alta o alta (clases del USGS).</dd></div>
+      <div><dt>Índice de exposición</dt><dd>Puntaje de 0 a 100 por edificación según cercanía al fuego, viento, pendiente y vegetación. Ordena dónde mirar primero; no predice daños.</dd></div>
+      <div><dt>Plus Code</dt><dd>Dirección corta de Google para un punto exacto, útil donde no hay calles con nombre. Ejemplo: 57P9G2CX+V8R8.</dd></div>
     </dl>
   </section>
 
   <section id="incendio3d">
     <div class="cabeza">
-      <span class="ceja">Incendio en 3D</span>
-      <h2 id="titulo3d">Relieve real con la imagen Sentinel-2 encima</h2>
-      <p class="tenue">Arrastra para mover, clic derecho o dos dedos para girar, rueda o pellizco para acercar. Las columnas son edificaciones de Google Open Buildings: más altas y más rojas, más expuestas.</p>
+      <span class="ceja">El incendio en 3D</span>
+      <h2 id="titulo3d">El incendio sobre el relieve real</h2>
+      <p class="tenue">El terreno es el modelo de elevación Copernicus con la imagen Sentinel-2 encima. La línea blanca es el borde del área quemada; los puntos son focos de calor; las columnas son edificaciones, más altas y más rojas cuanto más expuestas están.</p>
     </div>
-    <div class="controles">
-      <div class="grupo" id="sel-evento" role="group" aria-label="Incendio"></div>
-      <div class="grupo" id="texturas" role="group" aria-label="Imagen de fondo"></div>
-      <label class="chk"><input type="checkbox" id="c-sev" checked> Severidad</label>
-      <label class="chk"><input type="checkbox" id="c-edif" checked> Edificaciones</label>
-      <label class="chk"><input type="checkbox" id="c-focos" checked> Focos</label>
-    </div>
+    <ol class="pasos" aria-label="Cómo usar el visor">
+      <li><b>Elige el incendio</b><div class="grupo" id="sel-evento" role="group" aria-label="Incendio"></div></li>
+      <li><b>Elige la imagen de fondo</b><div class="grupo" id="texturas" role="group" aria-label="Imagen de fondo"></div></li>
+      <li><b>Activa o apaga capas</b>
+        <span class="capas">
+          <label class="chk"><input type="checkbox" id="c-sev" checked> Severidad</label>
+          <label class="chk"><input type="checkbox" id="c-edif" checked> Edificaciones</label>
+          <label class="chk"><input type="checkbox" id="c-focos" checked> Focos</label>
+        </span>
+      </li>
+    </ol>
     <div class="visor">
       <div style="display:grid;gap:10px;min-width:0">
         <div class="escena-caja">
           <div id="escena"></div>
           <div class="cargando" id="cargando-3d">Cargando terreno…</div>
-          <button class="brujula" id="brujula" type="button" aria-label="Orientar al norte"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M10 1 14 10H6Z" fill="#c8461b"/><path d="M10 19 6 10h8Z" fill="#444"/></svg></button>
+          <button class="brujula" id="brujula" type="button" aria-label="Orientar al norte" title="Orientar al norte"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M10 1 14 10H6Z" fill="#c8461b"/><path d="M10 19 6 10h8Z" fill="#444"/></svg></button>
           <div class="leyenda3d" id="leyenda3d"></div>
-          <span class="ayuda3d">Pasa el cursor sobre un foco o una edificación</span>
+          <span class="ayuda3d">Arrastra para mover · clic derecho o dos dedos para girar · rueda para acercar · pasa el cursor sobre un punto</span>
         </div>
         <div class="linea-tiempo">
           <button id="play-3d" type="button" aria-label="Reproducir el avance" aria-pressed="false">▶</button>
           <input type="range" id="dia-3d" min="0" max="1" value="1" aria-label="Día">
           <span id="etq-dia"></span>
         </div>
+        <p class="nota">Pulsa ▶ para ver el avance día por día, o arrastra la barra. Los focos del día elegido se ven en rojo, los de 1 y 2 días antes en naranja, y la línea punteada marca la zona con focos hasta ese día.</p>
       </div>
       <div class="lateral">
         <div class="panel" id="ficha3d"></div>
-        <div class="panel"><h3>Focos por día</h3><svg class="grafico" id="g-dias" viewBox="0 0 300 120" role="img" aria-label="Focos por día del incendio"></svg></div>
+        <div class="panel">
+          <h3>Focos por día</h3>
+          <p class="nota">Número de focos VIIRS detectados cada día del incendio. La barra naranja es el día elegido en la línea de tiempo.</p>
+          <svg class="grafico" id="g-dias" viewBox="0 0 300 120" role="img" aria-label="Focos por día del incendio"></svg>
+          <p class="lectura" id="l-dias"></p>
+        </div>
       </div>
     </div>
     <div class="dos">
-      <div class="panel"><h3>¿Qué se quemó? (ESA WorldCover 2021)</h3><svg class="grafico" id="g-cobertura" viewBox="0 0 460 140" role="img" aria-label="Hectáreas quemadas por cobertura"></svg></div>
-      <div class="panel"><h3>Severidad (USGS, sobre dNBR)</h3><svg class="grafico" id="g-severidad" viewBox="0 0 460 140" role="img" aria-label="Hectáreas por clase de severidad"></svg></div>
+      <div class="panel">
+        <h3>¿Qué se quemó?</h3>
+        <p class="nota">Hectáreas quemadas según el tipo de cobertura que había antes del fuego (ESA WorldCover 2021, 10 m).</p>
+        <svg class="grafico" id="g-cobertura" viewBox="0 0 460 140" role="img" aria-label="Hectáreas quemadas por cobertura"></svg>
+        <p class="lectura" id="l-cobertura"></p>
+      </div>
+      <div class="panel">
+        <h3>¿Con qué severidad?</h3>
+        <p class="nota">Hectáreas por clase de severidad del USGS, según cuánto cayó el NBR. Baja: la vegetación se chamuscó y suele rebrotar. Alta: la vegetación se consumió casi por completo.</p>
+        <svg class="grafico" id="g-severidad" viewBox="0 0 460 140" role="img" aria-label="Hectáreas por clase de severidad"></svg>
+        <p class="lectura" id="l-severidad"></p>
+      </div>
     </div>
   </section>
 
   <section id="viviendas">
     <div class="cabeza">
-      <span class="ceja">Viviendas expuestas · Google Open Buildings</span>
+      <span class="ceja">Edificaciones expuestas · Google Open Buildings</span>
       <h2 id="titulo-viv">Edificaciones cerca del fuego</h2>
-      <p class="tenue">Cada edificación detectada por Google en la zona recibe un índice de exposición. Copia el Plus Code y pégalo en Google Maps para ubicarla.</p>
+      <p class="tenue">Google Open Buildings detecta techos en imágenes satelitales. A cada edificación le asigné un índice de exposición de 0 a 100 que suma cuatro factores. El índice sirve para decidir dónde mirar primero; no predice qué edificación se quemará.</p>
     </div>
+    <div class="grupo" id="sel-evento-viv" role="group" aria-label="Incendio" style="justify-self:start"></div>
     <div class="formula">
-      <div><b>50</b><span>Cercanía: 50 en el borde del fuego (área quemada o focos del 18–20 oct), 0 a 2 km</span></div>
-      <div><b>20</b><span>A favor del viento de la tarde pronosticado para el 21–23 oct (±45°)</span></div>
-      <div><b>15</b><span>Cuesta arriba del punto de fuego más cercano: el fuego sube más rápido</span></div>
-      <div><b>15</b><span>Vegetación (WorldCover) en ~100 m alrededor</span></div>
+      <div><b>50</b><span><strong>Cercanía.</strong> 50 puntos en el borde del fuego (área quemada o focos del 18 al 20 de octubre), bajando de forma lineal hasta 0 a 2 km.</span></div>
+      <div><b>20</b><span><strong>Viento.</strong> 20 puntos si la edificación está hacia donde sopla el viento de la tarde pronosticado para el 21–23 de octubre (±45°).</span></div>
+      <div><b>15</b><span><strong>Pendiente.</strong> 15 puntos si está cuesta arriba del punto de fuego más cercano, porque el fuego sube laderas más rápido.</span></div>
+      <div><b>15</b><span><strong>Vegetación.</strong> Hasta 15 puntos según la proporción de vegetación (WorldCover) en unos 100 m a la redonda.</span></div>
     </div>
+    <p class="nota">Categorías: <span class="cat cat-3">Alta</span> 60 o más · <span class="cat cat-2">Media</span> de 35 a 60 · <span class="cat cat-1">Baja</span> menos de 35 · <span class="cat cat-4">Dentro del área quemada</span> el fuego ya pasó por ahí. Ejemplo: a 400 m del fuego, con viento a favor, cuesta arriba y la mitad de vegetación alrededor, una edificación suma 40 + 20 + 15 + 7.5 = 82.5 puntos.</p>
     <div class="dos">
-      <div class="panel"><h3>Edificaciones por categoría</h3><svg class="grafico" id="g-categorias" viewBox="0 0 460 150" role="img" aria-label="Edificaciones por categoría de exposición"></svg></div>
-      <div class="panel"><h3>Edificaciones por distancia al fuego</h3><svg class="grafico" id="g-distancia" viewBox="0 0 460 150" role="img" aria-label="Edificaciones acumuladas por distancia"></svg></div>
+      <div class="panel">
+        <h3>Edificaciones por categoría</h3>
+        <p class="nota">Edificaciones a 2 km o menos del fuego, según su nivel de exposición.</p>
+        <svg class="grafico" id="g-categorias" viewBox="0 0 460 150" role="img" aria-label="Edificaciones por categoría de exposición"></svg>
+        <p class="lectura" id="l-categorias"></p>
+      </div>
+      <div class="panel">
+        <h3>Edificaciones por distancia al fuego</h3>
+        <p class="nota">Conteo acumulado: cada barra incluye a las anteriores.</p>
+        <svg class="grafico" id="g-distancia" viewBox="0 0 460 150" role="img" aria-label="Edificaciones acumuladas por distancia"></svg>
+        <p class="lectura" id="l-distancia"></p>
+      </div>
+    </div>
+    <div class="cabeza">
+      <h3 id="titulo-tabla">Las 25 edificaciones más expuestas</h3>
+      <p class="nota">Ordenadas por índice. Pulsa un Plus Code para copiarlo y pégalo en Google Maps. Distancia: metros al punto de fuego más cercano. Vegetación: proporción de vegetación en unos 100 m. Área: superficie del techo.</p>
     </div>
     <div class="tabla-caja">
       <table>
@@ -235,30 +350,46 @@ footer { padding-block: 40px 60px; color: var(--muted); font-size: .84rem; displ
 
   <section id="peru">
     <div class="cabeza">
-      <span class="ceja">El contexto nacional</span>
+      <span class="ceja">Contexto nacional</span>
       <h2 id="titulo-peru">Focos VIIRS en el Perú</h2>
+      <p class="tenue">Para ubicar los dos incendios en la temporada: cada punto del mapa es un foco de calor detectado en el Perú. Los más brillantes son de los dos últimos días. Elige el periodo con los botones.</p>
     </div>
     <div class="dos">
       <div style="display:grid;gap:10px;min-width:0">
         <div class="grupo" id="sel-periodo" role="group" aria-label="Periodo" style="justify-self:start"></div>
         <div class="mapa-caja"><div id="mapa"></div></div>
+        <p class="nota">Pasa el cursor sobre un departamento para ver su nombre. Arrastra para mover el mapa.</p>
       </div>
       <div class="lateral">
-        <div class="panel"><h3>Focos por día</h3><svg class="grafico" id="g-nacional" viewBox="0 0 460 170" role="img" aria-label="Focos por día en el Perú"></svg></div>
-        <div class="panel"><h3>Incendios más grandes del periodo</h3><ol class="lista-top" id="top-incendios"></ol><p class="tenue" style="font-size:.78rem">Por número de focos. Regla: ≤ 1 km y ≤ 48 h.</p></div>
+        <div class="panel">
+          <h3>Focos por día en el Perú</h3>
+          <p class="nota">Focos de los tres satélites VIIRS por día. En naranja, el periodo elegido.</p>
+          <svg class="grafico" id="g-nacional" viewBox="0 0 460 170" role="img" aria-label="Focos por día en el Perú"></svg>
+          <p class="lectura" id="l-nacional"></p>
+        </div>
+        <div class="panel">
+          <h3>Incendios más grandes en 30 días</h3>
+          <p class="nota">Por número de focos, con la regla de 1 km y 48 horas. En naranja, los dos incendios analizados aquí.</p>
+          <ol class="lista-top" id="top-incendios"></ol>
+        </div>
       </div>
     </div>
   </section>
 
   <section id="decisiones">
     <div class="cabeza">
-      <span class="ceja">La lección de Curahuasi</span>
-      <h2>El mismo incendio, otras decisiones razonables</h2>
-      <p class="tenue">La computadora siempre da un número. Estas barras muestran cuánto cambian las hectáreas con otras fechas, otro umbral o sin exigir que la mancha toque un foco. En color, la decisión usada.</p>
+      <span class="ceja">Robustez de la cifra</span>
+      <h2>¿Cuánto cambian las hectáreas si se toman otras decisiones?</h2>
+      <p class="tenue">Un programa siempre devuelve un número, pero ese número depende de decisiones del analista: qué imágenes usar, desde qué caída del NBR se considera quemado (el umbral) y si se exige que cada mancha toque un foco de calor. En clase, el caso de Curahuasi mostró que estas decisiones pueden cambiar mucho el resultado. Aquí se recalculó el área con cada combinación razonable.</p>
     </div>
+    <p class="nota">Cómo leer las barras: cada barra es una combinación de <b>fechas de las imágenes posteriores</b> · <b>umbral de dNBR</b> · <b>con o sin exigir focos</b>. La barra naranja es la combinación usada en esta página.</p>
     <div class="dos">
-      <div class="panel"><h3 id="t-sens-0"></h3><svg class="grafico" id="g-sens-0" viewBox="0 0 460 260" role="img" aria-label="Sensibilidad de Chichas"></svg></div>
-      <div class="panel"><h3 id="t-sens-1"></h3><svg class="grafico" id="g-sens-1" viewBox="0 0 460 260" role="img" aria-label="Sensibilidad de Río Tambo"></svg></div>
+      <div class="panel"><h3 id="t-sens-0"></h3><svg class="grafico" id="g-sens-0" viewBox="0 0 460 260" role="img" aria-label="Sensibilidad de Chichas"></svg><p class="lectura" id="l-sens-0"></p></div>
+      <div class="panel"><h3 id="t-sens-1"></h3><svg class="grafico" id="g-sens-1" viewBox="0 0 460 260" role="img" aria-label="Sensibilidad de Río Tambo"></svg><p class="lectura" id="l-sens-1"></p></div>
+    </div>
+    <div class="cabeza">
+      <h3>Las decisiones usadas, una por una</h3>
+      <p class="nota">El umbral no se eligió a mano: es el valor que separa el fuego del ruido de fondo, medido en zonas sin focos a más de 3 km.</p>
     </div>
     <div class="tabla-caja">
       <table class="tabla-decisiones"><thead><tr><th>Decisión</th><th>Chichas</th><th>Río Tambo</th></tr></thead><tbody id="tabla-decisiones"></tbody></table>
@@ -268,42 +399,65 @@ footer { padding-block: 40px 60px; color: var(--muted); font-size: .84rem; displ
   <section id="clima">
     <div class="cabeza">
       <span class="ceja">Clima · Open-Meteo</span>
-      <h2>¿Puede crecer esta semana?</h2>
-      <p class="tenue">Día crítico: humedad mínima &lt; 30 %, ráfagas ≥ 30 km/h y lluvia &lt; 1 mm. La zona gris es el pronóstico desde el 21 de octubre.</p>
+      <h2>¿El clima favorece que el fuego crezca esta semana?</h2>
+      <p class="tenue">Treinta días de clima observado y siete de pronóstico en el centro de cada incendio. Un día es crítico cuando se juntan tres condiciones: humedad mínima menor a 30 %, ráfagas de 30 km/h o más y lluvia menor a 1 mm.</p>
     </div>
+    <p class="nota">Cómo leer: el área azul es la humedad mínima del día (%), las barras azules son la lluvia (mm), la línea naranja es la ráfaga máxima (km/h) y los puntos oscuros son días críticos. La franja gris es el pronóstico desde el 21 de octubre.</p>
     <div class="dos">
-      <div class="panel"><h3 id="t-clima-0"></h3><svg class="grafico" id="g-clima-0" viewBox="0 0 460 200" role="img" aria-label="Clima en Chichas"></svg></div>
-      <div class="panel"><h3 id="t-clima-1"></h3><svg class="grafico" id="g-clima-1" viewBox="0 0 460 200" role="img" aria-label="Clima en Río Tambo"></svg></div>
+      <div class="panel"><h3 id="t-clima-0"></h3><svg class="grafico" id="g-clima-0" viewBox="0 0 460 200" role="img" aria-label="Clima en Chichas"></svg><p class="lectura" id="l-clima-0"></p></div>
+      <div class="panel"><h3 id="t-clima-1"></h3><svg class="grafico" id="g-clima-1" viewBox="0 0 460 200" role="img" aria-label="Clima en Río Tambo"></svg><p class="lectura" id="l-clima-1"></p></div>
+    </div>
+  </section>
+
+  <section id="conclusiones">
+    <div class="cabeza">
+      <span class="ceja">Conclusiones</span>
+      <h2>Qué nos dicen los datos y cómo usarlos</h2>
+    </div>
+    <div class="conclusiones">
+      <article><h3>Un solo umbral no sirve para todo el Perú</h3><p>En la puna, el pasto arde con severidad baja y el umbral clásico de 0.27 deja fuera casi todo el incendio de Chichas. Medir el ruido de fondo en cada zona dio un umbral de 0.10 en la sierra y de 0.24 en la selva. Para medir incendios en el país, el umbral debe ajustarse a cada ecosistema.</p></article>
+      <article><h3>Río Tambo es la prioridad de seguimiento</h3><p>Es el incendio más grande de los dos, quemó bosque amazónico y seguía con focos al 19 de octubre. Ardió con humedad de 45 % a 70 %, así que el clima por sí solo no lo explica: es coherente con quemas para habilitar tierras.</p></article>
+      <article><h3>Las edificaciones expuestas se pueden ubicar una por una</h3><p>Cruzar el área quemada con Google Open Buildings convierte un mapa de manchas en una lista de 322 puntos con exposición alta, cada uno con su Plus Code. Esa lista sirve para planificar visitas o alertas a nivel local.</p></article>
+      <article><h3>Las cifras satelitales se presentan con su incertidumbre</h3><p>Las nubes ocultan el 11 % de Río Tambo después del fuego, y otras decisiones razonables cambian las hectáreas. Por eso la página muestra el rango completo junto a la cifra principal.</p></article>
     </div>
   </section>
 
   <section id="fuentes">
     <div class="cabeza">
-      <span class="ceja">Fuentes y límites</span>
+      <span class="ceja">Método y fuentes</span>
       <h2>Cómo se hizo y qué no dice</h2>
+      <p class="tenue">Todas las cifras salen de scripts públicos en Python con datos abiertos, sin ajustes a mano. El notebook del repositorio explica cada paso.</p>
     </div>
     <div class="dos">
       <div class="panel">
         <h3>Método</h3>
-        <ol style="margin:0;padding-left:20px;display:grid;gap:6px;font-size:.9rem">
-          <li>Focos VIIRS (S-NPP, NOAA-20, NOAA-21) de INPE, ubicados en distritos INEI y validados con NASA FIRMS.</li>
-          <li>Incendio = focos a ≤ 1 km y ≤ 48 h. Se eligen Chichas y el complejo de Río Tambo.</li>
-          <li>Sentinel-2 L2A (Planetary Computer): NBR con B8A y B12, desfase de +1000 corregido, nubes fuera con SCL; agua, roca y nieve fuera con WorldCover.</li>
-          <li>Umbral = máx(0,10; percentil 95 del dNBR en zonas sin focos a más de 3 km). Mediana 3×3, manchas ≥ 1 ha que toquen un foco entre las dos imágenes.</li>
-          <li>Cruces en la misma grilla de 20 m: WorldCover, Copernicus DEM y distritos.</li>
-          <li>Open Buildings v3 recortado por zona; índice de exposición con Open-Meteo (viento de la tarde del 21 al 23 de octubre).</li>
+        <ol class="lista-metodo">
+          <li><b>Focos.</b> Focos VIIRS (S-NPP, NOAA-20 y NOAA-21) de INPE, ubicados en distritos del INEI y validados con NASA FIRMS (diferencia de 1 % a 5 %).</li>
+          <li><b>Incendios.</b> Focos agrupados a 1 km o menos y 48 horas o menos. Se eligieron Chichas y el complejo de Río Tambo.</li>
+          <li><b>Imágenes.</b> Sentinel-2 L2A (Microsoft Planetary Computer): NBR con las bandas B8A y B12. Se quitaron nubes, agua, roca y nieve.</li>
+          <li><b>Área quemada.</b> Umbral igual al mayor valor entre 0.10 y el percentil 95 del dNBR en zonas sin focos. Solo cuentan manchas de 1 ha o más que tocan un foco ocurrido entre las dos imágenes.</li>
+          <li><b>Cruces.</b> Cobertura (WorldCover), relieve (Copernicus DEM) y distritos, en la misma grilla de 20 m.</li>
+          <li><b>Exposición.</b> Edificaciones de Open Buildings v3 recortadas por zona y puntuadas con el viento pronosticado de Open-Meteo.</li>
         </ol>
       </div>
       <div class="panel">
         <h3>Limitaciones</h3>
-        <ul style="margin:0;padding-left:20px;display:grid;gap:6px;font-size:.9rem">
-          <li>Un foco de calor no es un incendio, y el satélite no ve fuegos chicos, cortos o bajo dosel cerrado.</li>
-          <li>Las nubes esconden el fuego: en Río Tambo, 11 % de la zona no tiene ninguna imagen limpia posterior.</li>
-          <li>El umbral es una decisión: 0,10 en la puna y 0,24 en la selva. La sección de decisiones muestra cuánto pesa.</li>
-          <li>Open Buildings detecta techos, no hogares, con imágenes de hasta ~2023.</li>
-          <li>WorldCover es de 2021. El índice de exposición no es un modelo de propagación.</li>
-          <li>Herramienta académica e independiente: no reemplaza los reportes del COEN, INDECI, SERFOR ni SERNANP.</li>
+        <ul class="lista-metodo">
+          <li>Un foco de calor no es un incendio, y el satélite no ve fuegos pequeños, cortos o bajo un dosel cerrado.</li>
+          <li>Las nubes ocultan el fuego: en Río Tambo, el 11 % de la zona no tiene ninguna imagen limpia después del incendio. El área real puede ser mayor.</li>
+          <li>El umbral es una decisión: 0.10 en la puna y 0.24 en la selva. La sección de robustez muestra cuánto pesa.</li>
+          <li>Open Buildings detecta techos, no hogares: incluye corrales y depósitos, con imágenes de hasta 2023 aproximadamente.</li>
+          <li>WorldCover es de 2021. El índice de exposición no es un modelo de propagación del fuego.</li>
+          <li>Es un análisis académico e independiente. No reemplaza los reportes del COEN, INDECI, SERFOR ni SERNANP.</li>
         </ul>
+      </div>
+    </div>
+    <div class="panel creditos">
+      <h3>Contexto y créditos</h3>
+      <p>Trabajo del curso Ciencia de Datos con Python de la Universidad del Pacífico, a cargo del profesor Alexander Quispe. Mi aporte, el umbral de dNBR adaptativo y la exposición de cada edificación, forma parte del <a href="https://alexanderquispe.github.io/incendios-peru/">Monitor de incendios forestales del Perú</a> que el curso construyó entre 32 estudiantes. El análisis se desarrolló con asistencia de Claude Code.</p>
+      <div class="cita">
+        <span class="num" id="texto-cita">Guevara Vega, L. G. (2026). Incendios de Chichas y Río Tambo vistos desde el espacio. https://github.com/LuisGuevaraVega/incendios-peru</span>
+        <button class="copiar" type="button" id="copiar-cita">Copiar la cita</button>
       </div>
     </div>
   </section>
@@ -356,7 +510,7 @@ function activo(d) { return d.ultimo_foco.slice(0, 10) >= "2026-10-19"; }
 function pintarResumen() {
   $("#fichas").replaceChildren(...CLAVES.map(k => {
     const d = D.ev[k];
-    const estado = activo(d) ? el("span", { class: "pill activo", text: `Activo · último foco ${fechaCorta(d.ultimo_foco)}` })
+    const estado = activo(d) ? el("span", { class: "pill activo", text: `Activo · último foco el ${fechaCorta(d.ultimo_foco)}` })
                              : el("span", { class: "pill calma", text: `Sin focos desde el ${fechaCorta(d.ultimo_foco)}` });
     const kpi = (v, t) => el("div", { class: "kpi" }, el("b", { text: v }), el("span", { text: t }));
     return el("article", { class: "ficha" },
@@ -364,19 +518,20 @@ function pintarResumen() {
         el("div", {}, el("h3", { text: d.nombre, style: "font-size:1.6rem" }),
           el("span", { class: "tenue", text: `${d.provincia} · ${d.departamento} · ${d.region}` })), estado),
       el("div", { class: "kpis" },
-        kpi(fmt.format(d.ha_quemadas), `ha quemadas (Sentinel-2, al ${fechaCorta(d.post[0])})`),
-        kpi(`${fmt.format(d.por_cobertura[0]["%"])} %`, `${d.por_cobertura[0].cobertura.toLowerCase()} entre lo quemado`),
-        kpi(fmt.format(d.edificaciones_1km), "edificaciones a ≤ 1 km del fuego"),
-        kpi(fmt.format(d.edificaciones.Alta), "con exposición alta")),
+        kpi(`${fmt.format(d.ha_quemadas)} ha`, `quemadas según Sentinel-2, al ${fechaCorta(d.post[0])}`),
+        kpi(`${fmt.format(d.por_cobertura[0]["%"])} %`, `de lo quemado era ${d.por_cobertura[0].cobertura.toLowerCase()}`),
+        kpi(fmt.format(d.edificaciones_1km), "edificaciones a 1 km o menos del fuego"),
+        kpi(fmt.format(d.edificaciones.Alta), "edificaciones con exposición alta")),
       el("p", { class: "tenue", style: "font-size:.86rem",
-        text: `${fmt.format(d.focos_incendio)} focos VIIRS desde el ${fechaCorta(d.inicio)} · umbral dNBR ${d.umbral_dnbr.toFixed(2)} · ${fmt1.format(d.cobertura_post_pct)} % de la zona vista sin nubes después del fuego · altitud ${fmt.format(d.altitud_quemada_m[0])}–${fmt.format(d.altitud_quemada_m[2])} m` }));
+        text: `${fmt.format(d.focos_incendio)} focos VIIRS desde el ${fechaCorta(d.inicio)} · ardió entre ${fmt.format(d.altitud_quemada_m[0])} y ${fmt.format(d.altitud_quemada_m[2])} m de altitud · ${fmt1.format(d.cobertura_post_pct)} % de la zona se vio sin nubes después del fuego · umbral de dNBR ${d.umbral_dnbr.toFixed(2)}` }));
   }));
   const ch = D.ev.chichas, rt = D.ev.rio_tambo;
   const s27 = ch.sensibilidad.find(x => x.umbral === 0.27 && x.sembrado_focos).ha;
+  const toro = ch.por_distrito.find(f => f.distrito !== ch.distrito);
   $("#hallazgos").replaceChildren(
-    el("li", { html: `<span><b>Chichas: ${fmt.format(ch.ha_quemadas)} ha en tres días, ${fmt.format(ch.por_cobertura[0]["%"])} % pastizal de puna.</b> Con el umbral clásico de 0,27 se habrían reportado solo ${fmt.format(s27)} ha: el ${fmt.format(100 - 100 * s27 / ch.ha_quemadas)} % del área ardió con severidad baja. Un tercio está en el distrito vecino de Toro.</span>` }),
-    el("li", { html: `<span><b>Río Tambo: ${fmt.format(rt.ha_quemadas)} ha, ${fmt.format(rt.por_cobertura[0]["%"])} % bosque, y sigue activo.</b> ${fmt.format(rt.focos_incendio)} focos desde el ${fechaCorta(rt.inicio)}; ardió con humedad de 45–70 %, así que lo explican las quemas, no el clima.</span>` }),
-    el("li", { html: `<span><b>${fmt.format(rt.edificaciones_1km + ch.edificaciones_1km)} edificaciones a ≤ 1 km del fuego</b> (${fmt.format(rt.edificaciones_1km)} en Río Tambo y ${fmt.format(ch.edificaciones_1km)} en Chichas); ${fmt.format(rt.edificaciones.Alta + ch.edificaciones.Alta)} con exposición alta y ${rt.edificaciones["Dentro del área quemada"] + ch.edificaciones["Dentro del área quemada"]} ya dentro del área quemada.</span>` }));
+    el("li", { html: `<span><b>Chichas perdió ${fmt.format(ch.ha_quemadas)} ha de pastizal y matorral de puna en tres días (${fechaCorta(ch.inicio)} al ${fechaCorta(ch.ultimo_foco)}).</b> El ${fmt.format(ch.por_cobertura[0]["%"])} % fue pastizal. Con el umbral clásico de dNBR de 0.27 se habrían reportado solo ${fmt.format(s27)} ha, porque el pasto arde con severidad baja. ${toro ? `${fmt.format(toro.ha)} ha están en el distrito vecino de ${toro.distrito}.` : ""}</span>` }),
+    el("li", { html: `<span><b>Río Tambo quemó ${fmt.format(rt.ha_quemadas)} ha, casi todo bosque (${fmt.format(rt.por_cobertura[0]["%"])} %), y seguía activo al cierre.</b> Acumuló ${fmt.format(rt.focos_incendio)} focos desde el ${fechaCorta(rt.inicio)}. Ardió con humedad mínima de 45 % a 70 %, así que el clima por sí solo no explica el fuego.</span>` }),
+    el("li", { html: `<span><b>${fmt.format(rt.edificaciones_1km + ch.edificaciones_1km)} edificaciones están a 1 km o menos del fuego</b> (${fmt.format(rt.edificaciones_1km)} en Río Tambo y ${fmt.format(ch.edificaciones_1km)} en Chichas). De ellas, ${fmt.format(rt.edificaciones.Alta + ch.edificaciones.Alta)} tienen exposición alta y ${rt.edificaciones["Dentro del área quemada"] + ch.edificaciones["Dentro del área quemada"]} ya quedaron dentro del área quemada.</span>` }));
 }
 
 /* ------------------------------------------------------------- gráficos */
@@ -386,7 +541,7 @@ function barrasH(svgSel, filas, { ancho = 460, alto, etiqueta = 150, color = () 
   svg.attr("viewBox", `0 0 ${ancho} ${h}`);
   const x = d3.scaleLinear().domain([0, d3.max(filas, f => f.v) || 1]).range([0, ancho - etiqueta - 70]);
   const g = svg.selectAll("g").data(filas).join("g").attr("transform", (f, i) => `translate(0,${i * 26 + 4})`);
-  g.append("text").attr("x", etiqueta - 8).attr("y", 13).attr("text-anchor", "end").text(f => f.k);
+  g.append("text").attr("x", etiqueta - 8).attr("y", 13).attr("text-anchor", "end").attr("class", f => f.usado ? "usado-etq" : null).text(f => f.k);
   g.append("rect").attr("x", etiqueta).attr("y", 2).attr("height", 16).attr("rx", 3).attr("width", f => Math.max(1, x(f.v))).attr("fill", (f, i) => color(f, i));
   g.append("text").attr("x", f => etiqueta + x(f.v) + 6).attr("y", 14).style("fill", "var(--ink)").style("font-family", "var(--f-data)")
     .text(f => `${fmt.format(f.v)}${unidad ? " " + unidad : ""}`);
@@ -410,10 +565,19 @@ function pintarSensibilidad() {
     const d = D.ev[k];
     const t = d.sensibilidad;
     const min = d3.min(t, f => f.ha), max = d3.max(t, f => f.ha);
-    $(`#t-sens-${j}`).textContent = `${d.nombre}: de ${fmt.format(min)} a ${fmt.format(max)} ha`;
-    const filas = t.map(f => ({ k: `${f.posterior.split(" + ").map(fechaCorta).join("+")} · umbral ${String(f.umbral.toFixed(2)).replace(".", ",")} · ${f.sembrado_focos ? "con focos" : "sin focos"}`,
+    $(`#t-sens-${j}`).textContent = `${d.nombre}: entre ${fmt.format(min)} y ${fmt.format(max)} ha según la combinación`;
+    const filas = t.map(f => ({ k: `${f.posterior.split(" + ").map(fechaCorta).join("+")} · umbral ${f.umbral.toFixed(2)} · ${f.sembrado_focos ? "con focos" : "sin focos"}`,
       v: f.ha, usado: f.posterior === d.post.join(" + ") && Math.abs(f.umbral - d.umbral_dnbr) < 0.006 && f.sembrado_focos }));
     barrasH(`#g-sens-${j}`, filas, { etiqueta: 215, color: f => f.usado ? token("--ember") : token("--line") });
+    const sinFocos = t.find(f => f.posterior === d.post.join(" + ") && Math.abs(f.umbral - d.umbral_dnbr) < 0.006 && !f.sembrado_focos);
+    const clasico = t.find(f => f.posterior === d.post.join(" + ") && f.umbral === 0.27 && f.sembrado_focos);
+    const alt = t.find(f => f.posterior !== d.post.join(" + ") && f.sembrado_focos);
+    $(`#l-sens-${j}`).textContent = `La cifra usada es ${fmt.format(d.ha_quemadas)} ha.` +
+      (clasico ? ` Con el umbral clásico de 0.27 serían ${fmt.format(clasico.ha)} ha` : "") +
+      (sinFocos ? `, y sin exigir que las manchas toquen un foco, ${fmt.format(sinFocos.ha)} ha, porque se suman cambios que no son fuego.` : ".") +
+      (alt ? (Math.abs(alt.ha - d.ha_quemadas) / d.ha_quemadas < 0.05
+        ? ` Usar solo la imagen del ${alt.posterior.split(" + ").map(fechaCorta).join(" y ")} casi no cambia el resultado (${fmt.format(alt.ha)} ha): aquí el umbral es la decisión que más pesa.`
+        : ` Usar solo la imagen del ${alt.posterior.split(" + ").map(fechaCorta).join(" y ")} daría ${fmt.format(alt.ha)} ha, porque no ve lo que ardió después: aquí las fechas pesan tanto como el umbral.`) : "");
   });
 }
 
@@ -421,13 +585,13 @@ function pintarDecisiones() {
   const ch = D.ev.chichas, rt = D.ev.rio_tambo;
   const nubes = d => d.post.map((f, i) => `${fechaCorta(f)} (${fmt1.format(d.nubes_post_pct[i])} %)`).join(" → ");
   const filas = [
-    ["Imagen previa (nubes en la zona)", `${fechaCorta(ch.pre[0])} (${ch.nubes_pre_pct[0]} %)`, `${fechaCorta(rt.pre[0])} (${rt.nubes_pre_pct[0]} %)`],
-    ["Imagen posterior: compuesto, primera fecha limpia por píxel", nubes(ch), nubes(rt)],
-    ["Zona vista sin nubes después", `${fmt1.format(ch.cobertura_post_pct)} %`, `${fmt1.format(rt.cobertura_post_pct)} %`],
-    ["Ruido: p95 del dNBR sin focos a > 3 km", ch.ruido_p95, rt.ruido_p95],
-    ["Umbral usado = máx(0,10; ruido)", ch.umbral_dnbr, rt.umbral_dnbr],
-    ["Sembrado", "manchas ≥ 1 ha que tocan un foco (≤ 750 m)", "igual"],
-    ["Zona de análisis (lon/lat)", ch.bbox.join(", "), rt.bbox.join(", ")],
+    ["Imagen previa al fuego (nubes en la zona)", `${fechaCorta(ch.pre[0])} (${fmt1.format(ch.nubes_pre_pct[0])} %)`, `${fechaCorta(rt.pre[0])} (${fmt1.format(rt.nubes_pre_pct[0])} %)`],
+    ["Imágenes posteriores (se toma la primera fecha sin nubes en cada píxel)", nubes(ch), nubes(rt)],
+    ["Zona vista sin nubes después del fuego", `${fmt1.format(ch.cobertura_post_pct)} %`, `${fmt1.format(rt.cobertura_post_pct)} %`],
+    ["Ruido de fondo: percentil 95 del dNBR en zonas sin focos a más de 3 km", ch.ruido_p95.toFixed(3), rt.ruido_p95.toFixed(3)],
+    ["Umbral usado: el mayor entre 0.10 y el ruido", ch.umbral_dnbr.toFixed(2), rt.umbral_dnbr.toFixed(2)],
+    ["Filtro de manchas", "1 ha o más y a 750 m o menos de un foco", "igual"],
+    ["Zona de análisis (oeste, sur, este, norte)", ch.bbox.join(", "), rt.bbox.join(", ")],
   ];
   $("#tabla-decisiones").replaceChildren(...filas.map(f => el("tr", {}, ...f.map(c => el("td", { text: String(c) })))));
 }
@@ -453,8 +617,13 @@ function pintarClimas() {
   CLAVES.forEach((k, j) => {
     const d = D.ev[k], c = d.clima.filter(f => !f.pronostico);
     const crit = c.filter(f => f.dia_critico).length;
-    $(`#t-clima-${j}`).textContent = `${d.nombre}: ${crit} días críticos en 30 · humedad mínima ${fmt.format(d3.min(c, f => f.relative_humidity_2m_min))} %`;
+    $(`#t-clima-${j}`).textContent = `${d.nombre}: ${crit} ${crit === 1 ? "día crítico" : "días críticos"} en los últimos 30`;
     graficoClima(`#g-clima-${j}`, d);
+    const pr = d.clima.filter(f => f.pronostico), lluvia = d3.sum(pr, f => f.precipitation_sum);
+    const hmin = d3.min(c, f => f.relative_humidity_2m_min), hpr = d3.min(pr, f => f.relative_humidity_2m_min);
+    $(`#l-clima-${j}`).textContent = `En el último mes la humedad mínima bajó hasta ${fmt.format(hmin)} %. Para los próximos 7 días el pronóstico ${d.dias_criticos_pronostico ? `trae ${d.dias_criticos_pronostico} días críticos` : "no trae días críticos"}: la humedad no baja de ${fmt.format(hpr)} % y se esperan ${fmt.format(lluvia)} mm de lluvia. ` +
+      (crit > 10 ? "El mes fue muy seco y favoreció el fuego, pero la llegada de humedad y lluvia reduce el riesgo de que crezca esta semana."
+                 : "La zona estuvo húmeda todo el mes y seguirá así: si el fuego crece, será por nuevas quemas más que por el clima.");
   });
 }
 
@@ -462,7 +631,7 @@ function pintarClimas() {
 const M = { dias: 30 };
 function iniciarMapa() {
   const n = D.nac;
-  $("#titulo-peru").textContent = `${fmt.format(n.total)} focos VIIRS en el Perú del ${fechaCorta(n.desde)} al ${fechaCorta(n.hasta)}`;
+  $("#titulo-peru").textContent = `${fmt.format(n.total)} focos de calor en el Perú en 30 días (${fechaCorta(n.desde)} al ${fechaCorta(n.hasta)})`;
   const periodos = [[7, "7 días"], [14, "14 días"], [30, "30 días"]];
   const pintarBotones = () => $("#sel-periodo").replaceChildren(...periodos.map(([v, t]) => el("button", { type: "button", "aria-pressed": String(M.dias === v), text: t, onclick: () => { M.dias = v; pintarBotones(); pintarMapa(); } })));
   pintarBotones();
@@ -478,7 +647,8 @@ function iniciarMapa() {
   $("#top-incendios").replaceChildren(...top.map((f, i) => el("li", { class: ["RIO TAMBO", "CHICHAS"].includes(f.distrito) ? "marcado" : null },
     el("span", { class: "num tenue", text: i + 1 }), el("span", { text: `${titulo(f.distrito)} (${titulo(f.departamento)})` }), el("span", { class: "num", text: `${fmt.format(f.focos)} focos` }))));
 }
-const titulo = s => s.toLowerCase().replace(/(^|\s)\S/g, c => c.toUpperCase());
+const TILDES = { "RIO TAMBO": "Río Tambo", JUNIN: "Junín", HUANUCO: "Huánuco", APURIMAC: "Apurímac", "SAN MARTIN": "San Martín" };
+const titulo = s => TILDES[s] || s.toLowerCase().replace(/(^|\s)\S/g, c => c.toUpperCase());
 function pintarMapa() {
   const n = D.nac, ultimo = n.dias.length - 1, desde = ultimo - M.dias + 1;
   const pts = n.puntos.filter(p => p[2] >= desde);
@@ -495,6 +665,10 @@ function pintarMapa() {
       getPixelOffset: [0, -12], background: true, getBackgroundColor: [...rgb("--panel"), 225], backgroundPadding: [4, 2] }),
   ] });
   graficoNacional(desde);
+  const enPeriodo = d3.sum(n.por_dia.slice(desde)), pico = d3.maxIndex(n.por_dia);
+  const deps = Object.entries(n.departamentos).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k, v]) => `${titulo(k)} (${fmt.format(v)})`);
+  const pjunin = 100 * n.departamentos.JUNIN / n.total, parequipa = 100 * n.departamentos.AREQUIPA / n.total;
+  $("#l-nacional").textContent = `En los últimos ${M.dias} días hubo ${fmt.format(enPeriodo)} focos, ${fmt.format(enPeriodo / M.dias)} por día en promedio. El día con más focos fue el ${fechaCorta(n.dias[pico])} (${fmt.format(n.por_dia[pico])}). En 30 días, los departamentos con más focos fueron ${deps.join(", ")}; Junín aportó el ${fmt.format(pjunin)} % y Arequipa el ${fmt.format(parequipa)} %.`;
 }
 function graficoNacional(desde) {
   const n = D.nac, svg = d3.select("#g-nacional"); svg.selectAll("*").remove();
@@ -513,8 +687,9 @@ function graficoNacional(desde) {
 const E3 = { id: null, textura: "natural_post", dia: 0, play: null, vista: null };
 const NOMBRES_TEX = { natural_post: "Después", natural_pre: "Antes", infrarrojo_post: "Infrarrojo", relieve_post: "Relieve" };
 function iniciar3D() {
-  const pintarSel = () => $("#sel-evento").replaceChildren(...CLAVES.map(k => el("button", { type: "button", "aria-pressed": String(E3.id === k), text: D.ev[k].nombre,
-    onclick: () => { if (E3.id !== k) cargarEvento3D(k).then(pintarSel); } })));
+  // el mismo selector arriba del visor y en la sección de edificaciones
+  const pintarSel = () => ["#sel-evento", "#sel-evento-viv"].forEach(s => $(s).replaceChildren(...CLAVES.map(k => el("button", { type: "button", "aria-pressed": String(E3.id === k),
+    text: `${D.ev[k].nombre} (${D.ev[k].departamento})`, onclick: () => { if (E3.id !== k) { const p = cargarEvento3D(k); pintarSel(); p.then(pintarSel); } } }))));
   $("#dia-3d").addEventListener("input", ev => { pararPlay3D(); E3.dia = +ev.target.value; pintar3D(); });
   $("#play-3d").addEventListener("click", () => (E3.play ? pararPlay3D() : play3D()));
   for (const id of ["#c-sev", "#c-edif", "#c-focos"]) $(id).addEventListener("change", () => componerTextura().then(pintar3D));
@@ -695,12 +870,25 @@ function pintarGraficosEvento() {
   const colCob = { Bosque: "#2f6b3a", Matorral: "#8a8f3c", Pastizal: "#c9a84a", Cultivo: "#b6774e", Construido: "#7d7d7d" };
   barrasH("#g-cobertura", d.por_cobertura.filter(f => f.ha >= 0.5).map(f => ({ k: f.cobertura, v: f.ha })), { etiqueta: 110, color: f => colCob[f.k] || token("--muted") });
   barrasH("#g-severidad", d.severidad.map((f, i) => ({ k: f.clase, v: f.ha, i })), { etiqueta: 110, color: (f, i) => `rgb(${d.clases_severidad[i].color})` });
+  const c0 = d.por_cobertura[0], c1 = d.por_cobertura[1];
+  $("#l-cobertura").textContent = `En ${d.nombre}, el ${fmt.format(c0["%"])} % de lo quemado era ${c0.cobertura.toLowerCase()}` +
+    (c1 && c1["%"] >= 5 ? ` y el ${fmt.format(c1["%"])} %, ${c1.cobertura.toLowerCase()}.` : ".") +
+    (d.region === "Sierra" ? " Es vegetación de puna, que suele rebrotar con las lluvias." : " Es bosque amazónico, que tarda años en recuperarse.");
+  const tot = d3.sum(d.severidad, f => f.ha), dom = d.severidad.reduce((a, b) => (b.ha > a.ha ? b : a));
+  const fuerte = d3.sum(d.severidad.filter(f => f.dnbr_desde >= 0.44), f => f.ha);
+  $("#l-severidad").textContent = `La clase más extensa es ${dom.clase.toLowerCase()}, con el ${fmt.format(100 * dom.ha / tot)} % del área. Las clases moderada-alta y alta suman ${fmt.format(fuerte)} ha (${fmt1.format(100 * fuerte / tot)} %).`;
+  const pico = d.dias.reduce((a, b) => (b.focos > a.focos ? b : a));
+  $("#l-dias").textContent = `El día con más focos fue el ${fechaCorta(pico.fecha)}, con ${fmt.format(pico.focos)} de ${fmt.format(d.focos_incendio)} en total.`;
 }
 
 /* ------------------------------------------------------------- viviendas */
 function pintarViviendas() {
   const d = E3.datos;
-  $("#titulo-viv").textContent = `${d.nombre}: ${fmt.format(d.edificaciones_2km)} edificaciones a ≤ 2 km del fuego, de ${fmt.format(d.edificaciones_total)} en la zona`;
+  $("#titulo-viv").textContent = `${d.nombre}: ${fmt.format(d.edificaciones.Alta)} edificaciones con exposición alta, de ${fmt.format(d.edificaciones_2km)} a 2 km o menos del fuego`;
+  $("#titulo-tabla").textContent = `Las 25 edificaciones más expuestas en ${d.nombre}`;
+  const e = d.edificaciones, dentro = e["Dentro del área quemada"];
+  $("#l-categorias").textContent = `De ${fmt.format(d.edificaciones_total)} edificaciones detectadas en la zona, ${fmt.format(d.edificaciones_2km)} están a 2 km o menos del fuego: ${fmt.format(e.Alta)} con exposición alta, ${fmt.format(e.Media)} media y ${fmt.format(e.Baja)} baja. ${dentro ? `${dentro} ${dentro === 1 ? "quedó" : "quedaron"} dentro del área quemada.` : ""}`;
+  $("#l-distancia").textContent = `${fmt.format(d.edificaciones_500m)} edificaciones están a 500 m o menos del fuego y ${fmt.format(d.edificaciones_1km)} a 1 km o menos. ${fmt.format(d.edificaciones_viento_2km)} de las que están a 2 km o menos quedan a favor del viento previsto, que sopla hacia ${rumbo(d.viento.hacia_grados)}.`;
   const orden = [4, 3, 2, 1];
   barrasH("#g-categorias", orden.map(k => ({ k: CAT[k], v: d.edificaciones[CAT[k]], c: k })), { etiqueta: 170, unidad: "", color: f => `rgb(${CAT_COLOR[f.c]})` });
   const cortes = [250, 500, 1000, 2000];
@@ -723,6 +911,19 @@ async function copiar(texto, boton) {
 }
 
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { if (D.nac) { pintarMapa(); pintarSensibilidad(); pintarClimas(); if (E3.datos) { pintar3D(); pintarGraficosEvento(); pintarViviendas(); } } });
+/* ------------------------------------------------------------- navegación y cita */
+const enlaces = [...document.querySelectorAll("nav.barra a")];
+const observador = new IntersectionObserver(entradas => {
+  for (const en of entradas) if (en.isIntersecting) enlaces.forEach(a => a.setAttribute("aria-current", String(a.hash === "#" + en.target.id)));
+}, { rootMargin: "-45% 0px -50% 0px" });
+document.querySelectorAll("main section[id]").forEach(s => observador.observe(s));
+$("#copiar-cita").addEventListener("click", ev => {
+  const b = ev.currentTarget;
+  navigator.clipboard.writeText($("#texto-cita").textContent).then(() => { b.textContent = "Cita copiada"; setTimeout(() => (b.textContent = "Copiar la cita"), 1400); })
+    .catch(() => { const r = document.createRange(); r.selectNodeContents($("#texto-cita")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); });
+});
 iniciar().catch(err => { $("#cargando-3d").textContent = "No se pudieron cargar los datos: " + err.message; console.error(err); });
 </script>
-</body></html>
+
+</body>
+</html>
