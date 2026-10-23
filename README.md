@@ -2,7 +2,7 @@
 
 **Luis Gabriel Guevara Vega** · Python Intermedio · Diplomatura de QLab · Pontificia Universidad Católica del Perú (PUCP) · datos al **20 de octubre de 2026**
 
-- **Dashboard 3D:** [claude.ai/artifact/5zC59rYbPi2SQ47PrArLYL](https://claude.ai/artifact/5zC59rYbPi2SQ47PrArLYL) · copia en GitHub Pages: [luisguevaravega.github.io/incendios-peru](https://luisguevaravega.github.io/incendios-peru/)
+- **Informe interactivo con vista 3D:** [claude.ai/artifact/5zC59rYbPi2SQ47PrArLYL](https://claude.ai/artifact/5zC59rYbPi2SQ47PrArLYL) · copia en GitHub Pages: [luisguevaravega.github.io/incendios-peru](https://luisguevaravega.github.io/incendios-peru/)
 - **Diapositivas:** [claude.ai/artifact/PVJG8uQaNE7VpfKT9hgWjy](https://claude.ai/artifact/PVJG8uQaNE7VpfKT9hgWjy)
 - **Notebook:** [`notebooks/incendios_chichas_rio_tambo.ipynb`](notebooks/incendios_chichas_rio_tambo.ipynb) · **Streamlit:** `uv run streamlit run app/streamlit_app.py`
 
@@ -45,7 +45,7 @@ Retos A (medir un incendio con dNBR) + C (cruzar con WorldCover) + Google Open B
 | 5 | **Umbral = máx(0,10; p95 del dNBR en zonas sin focos a > 3 km)**; mediana 3×3; manchas ≥ 1 ha que toquen un foco ocurrido entre las dos imágenes | `src/sentinel.py` |
 | 6 | Cruces en la misma grilla de 20 m: WorldCover, DEM, distritos | `src/cruces.py` |
 | 7 | Índice de exposición por edificación (abajo) | `src/cruces.py` |
-| 8 | Exportación para README, notebook, Streamlit y dashboard 3D | `src/pipeline.py`, `src/figuras.py` |
+| 8 | Exportación para README, notebook, Streamlit e informe interactivo 3D | `src/pipeline.py`, `src/figuras.py` |
 
 **Decisiones que cambian el número** (la lección de Curahuasi):
 
@@ -100,8 +100,8 @@ Para otro incendio: agrega una entrada en `INCENDIOS` de `src/config.py` (caja, 
 src/          config, focos, sentinel, cruces, open_buildings, pipeline, figuras
 notebooks/    notebook explicado paso a paso (con salidas)
 app/          dashboard Streamlit
-web/          dashboard 3D (deck.gl) publicado en Claude
-docs/         el mismo dashboard para GitHub Pages + data/ que lee
+web/          informe interactivo con vista 3D (deck.gl), publicado en Claude
+docs/         el mismo informe para GitHub Pages + data/ que lee
 data/processed/  resultados: resumen.json, CSV, GeoJSON por incendio
 figs/         figuras
 ```

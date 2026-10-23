@@ -26,7 +26,7 @@ clave = st.sidebar.radio("Incendio", ["chichas", "rio_tambo"], format_func=lambd
 r = json.loads((PROC / clave / "resumen.json").read_text(encoding="utf-8"))
 st.sidebar.markdown(f"**Imagen previa:** {', '.join(r['pre'])}  \n**Posterior:** {' → '.join(r['post'])}  \n"
                     f"**Nubes después:** {r['nubes_post_pct']} %  \n**Umbral dNBR:** {r['umbral_dnbr']}")
-st.sidebar.markdown("[Dashboard 3D](https://claude.ai/artifact/5zC59rYbPi2SQ47PrArLYL)")
+st.sidebar.markdown("[Informe interactivo 3D](https://claude.ai/artifact/5zC59rYbPi2SQ47PrArLYL)")
 
 c = st.columns(4)
 c[0].metric("Área quemada", f"{r['ha_quemadas']:,.0f} ha")
